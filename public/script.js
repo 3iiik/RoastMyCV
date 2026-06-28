@@ -38,7 +38,9 @@ const elements = {
   resultsLogo: document.getElementById('resultsLogo'),
   roastToggleBtn: document.getElementById('roastToggleBtn'),
   fixToggleBtn: document.getElementById('fixToggleBtn'),
-  copyResultBtn: document.getElementById('copyResultBtn'),
+  shareBtn: document.getElementById('shareBtn'),
+  shareDropdown: document.getElementById('shareDropdown'),
+  shareCopyLink: document.getElementById('shareCopyLink'),
   scoreCard: document.getElementById('scoreCard'),
   scoreRingFill: document.getElementById('scoreRingFill'),
   scoreValue: document.getElementById('scoreValue'),
@@ -95,10 +97,22 @@ elements.fixToggleBtn.addEventListener('click', () => showFixView());
 
 elements.resultsLogo.addEventListener('click', resetUpload);
 
-elements.copyResultBtn.addEventListener('click', () => {
-  const text = isShowingFix ? currentFix : currentRoast;
-  if (!text) return;
-  copyToClipboard(text);
+elements.shareBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  elements.shareDropdown.hidden = !elements.shareDropdown.hidden;
+});
+
+elements.shareCopyLink.addEventListener('click', () => {
+  navigator.clipboard.writeText('https://roastmycv-production.up.railway.app').then(() => {
+    elements.shareDropdown.hidden = true;
+    showToast('Link copied to clipboard!');
+  });
+});
+
+document.addEventListener('click', (e) => {
+  if (!elements.shareBtn.contains(e.target) && !elements.shareDropdown.contains(e.target)) {
+    elements.shareDropdown.hidden = true;
+  }
 });
 
 elements.retryBtn.addEventListener('click', () => {
@@ -397,18 +411,6 @@ function hideResults() {
   elements.scoreCard.hidden = true;
   elements.tipsCard.hidden = true;
   hideKofiPopup();
-}
-
-function copyToClipboard(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    const original = elements.copyResultBtn.textContent;
-    elements.copyResultBtn.textContent = '✅ Copied!';
-    setTimeout(() => {
-      elements.copyResultBtn.textContent = original;
-    }, 2000);
-  }).catch(() => {
-    showToast('Failed to copy. Try selecting the text manually.');
-  });
 }
 
 let toastTimeout = null;

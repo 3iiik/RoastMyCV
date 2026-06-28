@@ -86,6 +86,12 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
 
 /* Score ring animation */
 .score-ring-fill { transition: stroke-dashoffset 0.8s ease, stroke 0.3s ease; }
+
+/* Share dropdown */
+.share-dropdown { position: absolute; top: calc(100% + 6px); right: 0; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 4px; min-width: 200px; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.4); animation: dropFadeIn 0.15s ease; }
+@keyframes dropFadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+.share-dropdown-item { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 12px; font-size: 12px; color: #ccc; text-decoration: none; border: none; background: none; cursor: pointer; border-radius: 6px; font-family: inherit; transition: all 0.15s; text-align: left; white-space: nowrap; }
+.share-dropdown-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
 </style>
 <script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"tertiary-container": "#059eff", "tertiary-fixed-dim": "#9ccaff", "on-secondary-container": "#491d00", "on-tertiary-container": "#003357", "surface-container": "#2b1c16", "outline-variant": "#5a4136", "on-error-container": "#ffdad6", "tertiary-fixed": "#d0e4ff", "on-tertiary-fixed": "#001d35", "secondary-container": "#e3701e", "primary-container": "#ff6b00", "error-container": "#93000a", "surface-container-lowest": "#170b06", "on-primary": "#561f00", "inverse-primary": "#a04100", "primary-fixed-dim": "#ffb693", "inverse-surface": "#f8ddd2", "surface-container-highest": "#41312a", "on-tertiary": "#003257", "on-primary-container": "#572000", "on-surface": "#f8ddd2", "on-secondary-fixed": "#331200", "surface-container-high": "#362720", surface: "#1d100a", "on-secondary": "#532200", tertiary: "#9ccaff", background: "#1d100a", "on-secondary-fixed-variant": "#763300", outline: "#a98a7d", "secondary-fixed": "#ffdbc9", "on-background": "#f8ddd2", "inverse-on-surface": "#3d2d26", "on-tertiary-fixed-variant": "#00497b", "primary-fixed": "#ffdbcc", "on-surface-variant": "#e2bfb0", "on-primary-fixed-variant": "#7a3000", "surface-variant": "#41312a", "on-primary-fixed": "#351000", "on-error": "#690005", error: "#ffb4ab", primary: "#ffb693", "surface-tint": "#ffb693", "surface-container-low": "#261812", secondary: "#ffb68d", "secondary-fixed-dim": "#ffb68d", "surface-bright": "#46362e", "surface-dim": "#1d100a"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {unit: "6px", "margin-desktop": "32px", gutter: "20px", "container-max": "1280px", "margin-mobile": "12px"}, fontFamily: {"body-lg": ["Inter"], "label-md": ["Inter"], "display-xl": ["Montserrat"], "display-xl-mobile": ["Montserrat"], "headline-lg": ["Montserrat"], "body-md": ["Inter"], "headline-md": ["Montserrat"], headline: ["Montserrat"], display: ["Montserrat"], body: ["Inter"], label: ["Inter"]}, fontSize: {"body-lg": ["15px", {lineHeight: "24px", fontWeight: "400"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600"}], "display-xl": ["54px", {lineHeight: "62px", letterSpacing: "-0.04em", fontWeight: "900"}], "display-xl-mobile": ["34px", {lineHeight: "42px", letterSpacing: "-0.02em", fontWeight: "900"}], "headline-lg": ["27px", {lineHeight: "34px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "headline-md": ["20px", {lineHeight: "28px", fontWeight: "700"}]}}}};</script>
 </head>
@@ -177,19 +183,6 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
     </section>
   </main>
 
-  <footer class="w-full py-10 mt-12 bg-surface border-t border-outline-variant">
-    <div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop gap-gutter max-w-container-max mx-auto">
-      <div class="space-y-2 text-center md:text-left">
-        <div class="font-headline-md text-primary font-bold">RoastMyCV</div>
-        <p class="font-body-md text-body-md text-on-surface-variant">© 2024 RoastMyCV. Brutal Honesty Guaranteed.</p>
-      </div>
-      <div class="flex gap-8">
-        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary underline transition-all opacity-80 hover:opacity-100" href="#">Twitter</a>
-        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary underline transition-all opacity-80 hover:opacity-100" href="#">LinkedIn</a>
-        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary underline transition-all opacity-80 hover:opacity-100" href="https://ko-fi.com/roastmycv" target="_blank">Donate on Ko-fi</a>
-      </div>
-    </div>
-  </footer>
 </div>
 
 <!-- ==================== RESULTS PAGE ==================== -->
@@ -203,7 +196,14 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
       </div>
       <div class="flex items-center gap-3">
         <a href="https://ko-fi.com/roastmycv" target="_blank" rel="noopener" class="border border-[#ff6b00] text-[#ff6b00] px-4 py-1.5 rounded-lg font-bold text-xs hover:bg-[#ff6b00] hover:text-white transition-all no-underline">☕ Support</a>
-        <button class="border border-outline-variant text-on-surface-variant px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-surface-container transition-colors" id="copyResultBtn">📋 Copy</button>
+        <div class="relative" id="shareContainer">
+          <button class="bg-[#121212] text-white border border-[#333] px-4 py-1.5 rounded-lg font-bold text-xs hover:bg-[#1a1a1a] transition-all whitespace-nowrap" id="shareBtn">🔗 Share</button>
+          <div class="share-dropdown" id="shareDropdown" hidden>
+            <a href="https://twitter.com/intent/tweet?text=I%20just%20got%20my%20resume%20brutally%20roasted%20by%20AI%20%F0%9F%98%82%20Try%20RoastMyCV%20for%20free%20%E2%86%92%20https%3A%2F%2Froastmycv-production.up.railway.app" target="_blank" rel="noopener" class="share-dropdown-item">🐦 Share on X (Twitter)</a>
+            <a href="https://wa.me/?text=Check%20this%20out%2C%20it%20roasts%20your%20resume%20and%20fixes%20it%20for%20free%20%F0%9F%94%A5%20%E2%86%92%20https%3A%2F%2Froastmycv-production.up.railway.app" target="_blank" rel="noopener" class="share-dropdown-item">💬 Share on WhatsApp</a>
+            <button class="share-dropdown-item" id="shareCopyLink">📋 Copy Link</button>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -260,19 +260,6 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
     </div>
   </div>
 
-  <footer class="w-full py-10 mt-12 bg-surface border-t border-outline-variant">
-    <div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop gap-gutter max-w-container-max mx-auto">
-      <div class="flex flex-col items-center md:items-start gap-2">
-        <div class="font-headline-md text-primary font-bold">RoastMyCV</div>
-        <p class="font-body-md text-body-md text-on-surface-variant opacity-80">© 2024 RoastMyCV. Brutal Honesty Guaranteed.</p>
-      </div>
-      <div class="flex gap-8">
-        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary underline transition-all opacity-80 hover:opacity-100" href="#">Twitter</a>
-        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary underline transition-all opacity-80 hover:opacity-100" href="#">LinkedIn</a>
-        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary underline transition-all opacity-80 hover:opacity-100" href="https://ko-fi.com/roastmycv" target="_blank">Donate on Ko-fi</a>
-      </div>
-    </div>
-  </footer>
 </div>
 
 <script src="script.js"></script>
