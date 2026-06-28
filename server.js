@@ -29,7 +29,7 @@ const limiter = rateLimit({
 // app.use('/api/', limiter);
 
 async function callGemini(prompt, resumeText) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
   const response = await axios.post(url, {
     contents: [{
       parts: [{ text: prompt + '\n\n---\n' + resumeText }]
