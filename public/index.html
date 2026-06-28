@@ -29,19 +29,37 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
 .loading-section { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; z-index: 500; }
 .loading-section:not([hidden]) { display: flex; }
 .loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
-.loading-content { position: relative; text-align: center; padding: 48px; }
-.spinner { width: 48px; height: 48px; border: 3px solid #41312a; border-top-color: #ff6b00; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 24px; }
+.loading-content { position: relative; text-align: center; padding: 36px; }
+.spinner { width: 40px; height: 40px; border: 3px solid #41312a; border-top-color: #ff6b00; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 18px; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.loading-message { font-size: 1.15rem; color: #f8ddd2; animation: pulse 1.5s ease-in-out infinite; }
+.loading-message { font-size: 0.95rem; color: #f8ddd2; animation: pulse 1.5s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
 
+/* Results flex layout */
+.results-grid { display: flex; gap: 20px; align-items: start; }
+.results-grid-left { max-width: 220px; flex: 0 0 220px; }
+.results-grid-center { flex: 1; min-width: 0; }
+.results-grid-right { max-width: 220px; flex: 0 0 220px; }
+@media (max-width: 900px) { .results-grid { flex-direction: column; } .results-grid-left, .results-grid-right { max-width: none; flex: none; } }
+
+/* RMD markdown styles */
+.rmd h2 { font-size: 0.95rem; margin: 20px 0 8px; color: #ff4500; font-weight: 700; }
+.rmd h3 { font-size: 0.9rem; margin: 16px 0 6px; color: #fff; font-weight: 600; }
+.rmd strong { color: #fff; }
+.rmd ul { margin: 6px 0 12px; padding-left: 20px; }
+.rmd li { margin-bottom: 4px; }
+.rmd p { margin-bottom: 10px; }
+.rmd code { background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; font-size: 0.85em; }
+.rmd hr { border: none; border-top: 1px solid #27272A; margin: 18px 0; }
+.rmd blockquote { border-left: 3px solid #ff6b00; padding-left: 12px; margin: 10px 0; color: #a98a7d; }
+
 /* Progress bar */
-.progress-bar { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: #0A0A0A; z-index: 9999; overflow: hidden; }
+.progress-bar { position: fixed; top: 0; left: 0; width: 100%; height: 2px; background: #0A0A0A; z-index: 9999; overflow: hidden; }
 .progress-bar::after { content: ''; position: absolute; top: 0; left: -40%; width: 40%; height: 100%; background: linear-gradient(90deg, #ff6b00, #00c853, #ff6b00); animation: progressSlide 1.2s ease-in-out infinite; }
 @keyframes progressSlide { 0% { left: -40%; } 100% { left: 110%; } }
 
 /* Toast */
-.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1d100a; border: 1px solid #5a4136; color: #f8ddd2; padding: 12px 24px; border-radius: 0.75rem; font-size: 0.9rem; font-weight: 500; z-index: 1000; animation: toastIn 0.3s ease; white-space: nowrap; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1d100a; border: 1px solid #5a4136; color: #f8ddd2; padding: 10px 20px; border-radius: 0.75rem; font-size: 0.8rem; font-weight: 500; z-index: 1000; animation: toastIn 0.3s ease; white-space: nowrap; }
 @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 
 /* Fix for hidden attribute */
@@ -50,7 +68,7 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
 /* Score ring animation */
 .score-ring-fill { transition: stroke-dashoffset 0.8s ease, stroke 0.3s ease; }
 </style>
-<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"tertiary-container": "#059eff", "tertiary-fixed-dim": "#9ccaff", "on-secondary-container": "#491d00", "on-tertiary-container": "#003357", "surface-container": "#2b1c16", "outline-variant": "#5a4136", "on-error-container": "#ffdad6", "tertiary-fixed": "#d0e4ff", "on-tertiary-fixed": "#001d35", "secondary-container": "#e3701e", "primary-container": "#ff6b00", "error-container": "#93000a", "surface-container-lowest": "#170b06", "on-primary": "#561f00", "inverse-primary": "#a04100", "primary-fixed-dim": "#ffb693", "inverse-surface": "#f8ddd2", "surface-container-highest": "#41312a", "on-tertiary": "#003257", "on-primary-container": "#572000", "on-surface": "#f8ddd2", "on-secondary-fixed": "#331200", "surface-container-high": "#362720", surface: "#1d100a", "on-secondary": "#532200", tertiary: "#9ccaff", background: "#1d100a", "on-secondary-fixed-variant": "#763300", outline: "#a98a7d", "secondary-fixed": "#ffdbc9", "on-background": "#f8ddd2", "inverse-on-surface": "#3d2d26", "on-tertiary-fixed-variant": "#00497b", "primary-fixed": "#ffdbcc", "on-surface-variant": "#e2bfb0", "on-primary-fixed-variant": "#7a3000", "surface-variant": "#41312a", "on-primary-fixed": "#351000", "on-error": "#690005", error: "#ffb4ab", primary: "#ffb693", "surface-tint": "#ffb693", "surface-container-low": "#261812", secondary: "#ffb68d", "secondary-fixed-dim": "#ffb68d", "surface-bright": "#46362e", "surface-dim": "#1d100a"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {unit: "8px", "margin-desktop": "40px", gutter: "24px", "container-max": "1280px", "margin-mobile": "16px"}, fontFamily: {"body-lg": ["Inter"], "label-md": ["Inter"], "display-xl": ["Montserrat"], "display-xl-mobile": ["Montserrat"], "headline-lg": ["Montserrat"], "body-md": ["Inter"], "headline-md": ["Montserrat"], headline: ["Montserrat"], display: ["Montserrat"], body: ["Inter"], label: ["Inter"]}, fontSize: {"body-lg": ["18px", {lineHeight: "28px", fontWeight: "400"}], "label-md": ["14px", {lineHeight: "20px", letterSpacing: "0.05em", fontWeight: "600"}], "display-xl": ["64px", {lineHeight: "72px", letterSpacing: "-0.04em", fontWeight: "900"}], "display-xl-mobile": ["40px", {lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "900"}], "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}], "headline-md": ["24px", {lineHeight: "32px", fontWeight: "700"}]}}}};</script>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"tertiary-container": "#059eff", "tertiary-fixed-dim": "#9ccaff", "on-secondary-container": "#491d00", "on-tertiary-container": "#003357", "surface-container": "#2b1c16", "outline-variant": "#5a4136", "on-error-container": "#ffdad6", "tertiary-fixed": "#d0e4ff", "on-tertiary-fixed": "#001d35", "secondary-container": "#e3701e", "primary-container": "#ff6b00", "error-container": "#93000a", "surface-container-lowest": "#170b06", "on-primary": "#561f00", "inverse-primary": "#a04100", "primary-fixed-dim": "#ffb693", "inverse-surface": "#f8ddd2", "surface-container-highest": "#41312a", "on-tertiary": "#003257", "on-primary-container": "#572000", "on-surface": "#f8ddd2", "on-secondary-fixed": "#331200", "surface-container-high": "#362720", surface: "#1d100a", "on-secondary": "#532200", tertiary: "#9ccaff", background: "#1d100a", "on-secondary-fixed-variant": "#763300", outline: "#a98a7d", "secondary-fixed": "#ffdbc9", "on-background": "#f8ddd2", "inverse-on-surface": "#3d2d26", "on-tertiary-fixed-variant": "#00497b", "primary-fixed": "#ffdbcc", "on-surface-variant": "#e2bfb0", "on-primary-fixed-variant": "#7a3000", "surface-variant": "#41312a", "on-primary-fixed": "#351000", "on-error": "#690005", error: "#ffb4ab", primary: "#ffb693", "surface-tint": "#ffb693", "surface-container-low": "#261812", secondary: "#ffb68d", "secondary-fixed-dim": "#ffb68d", "surface-bright": "#46362e", "surface-dim": "#1d100a"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {unit: "6px", "margin-desktop": "32px", gutter: "20px", "container-max": "1280px", "margin-mobile": "12px"}, fontFamily: {"body-lg": ["Inter"], "label-md": ["Inter"], "display-xl": ["Montserrat"], "display-xl-mobile": ["Montserrat"], "headline-lg": ["Montserrat"], "body-md": ["Inter"], "headline-md": ["Montserrat"], headline: ["Montserrat"], display: ["Montserrat"], body: ["Inter"], label: ["Inter"]}, fontSize: {"body-lg": ["15px", {lineHeight: "24px", fontWeight: "400"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600"}], "display-xl": ["54px", {lineHeight: "62px", letterSpacing: "-0.04em", fontWeight: "900"}], "display-xl-mobile": ["34px", {lineHeight: "42px", letterSpacing: "-0.02em", fontWeight: "900"}], "headline-lg": ["27px", {lineHeight: "34px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "headline-md": ["20px", {lineHeight: "28px", fontWeight: "700"}]}}}};</script>
 </head>
 <body class="bg-[#0A0A0A] text-on-surface font-body-md antialiased">
 
@@ -71,16 +89,16 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
 <!-- ==================== UPLOAD PAGE ==================== -->
 <div id="uploadPage">
   <nav class="fixed top-0 w-full z-50 bg-surface border-b border-outline-variant">
-    <div class="flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto">
-      <div class="font-display-xl text-primary font-black tracking-tighter">RoastMyCV</div>
+    <div class="flex justify-between items-center px-margin-desktop py-3 max-w-container-max mx-auto">
+      <div class="font-display-xl text-primary font-black tracking-tighter" style="font-size: 1.4rem;">RoastMyCV</div>
       <div class="flex gap-8 items-center">
         <a href="https://ko-fi.com/roastmycv" target="_blank" rel="noopener" class="border border-primary-container text-primary-container px-5 py-2 rounded-lg font-label-md text-label-md font-bold hover:bg-primary-container hover:text-on-primary-container transition-all">☕ Support on Ko-fi</a>
       </div>
     </div>
   </nav>
 
-  <main class="flex-grow pt-32 pb-16 px-margin-mobile md:px-margin-desktop max-w-[900px] mx-auto w-full" id="uploadSection">
-    <header class="text-center mb-16">
+  <main class="flex-grow pt-24 pb-12 px-margin-mobile md:px-margin-desktop max-w-[900px] mx-auto w-full" id="uploadSection">
+    <header class="text-center mb-12">
       <h1 class="font-display-xl text-display-xl-mobile md:text-display-xl text-on-surface mb-4">
         Brutal AI Resume <span class="text-primary-container">Feedback.</span> Professional Results.
       </h1>
@@ -90,13 +108,13 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
     </header>
 
     <section class="space-y-8">
-      <div class="relative group cursor-pointer bg-[#121212] border-2 border-dashed border-[#27272A] hover:border-primary-container transition-all duration-300 rounded-xl p-12 text-center flex flex-col items-center justify-center min-h-[320px]" id="drop-zone">
+      <div class="relative group cursor-pointer bg-[#121212] border-2 border-dashed border-[#27272A] hover:border-primary-container transition-all duration-300 rounded-xl p-8 text-center flex flex-col items-center justify-center min-h-[260px]" id="drop-zone">
         <input accept=".pdf" class="hidden" id="file-upload" type="file"/>
-        <div class="bg-surface-container-high w-20 h-20 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-          <span class="material-symbols-outlined text-primary-container text-4xl">upload_file</span>
+        <div class="bg-surface-container-high w-16 h-16 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+          <span class="material-symbols-outlined text-primary-container text-3xl">upload_file</span>
         </div>
-        <h2 class="font-headline-md text-headline-md text-on-surface mb-2">Drop your resume here</h2>
-        <p class="font-body-md text-body-md text-on-surface-variant mb-4">Support PDF (Max 10MB)</p>
+        <h2 class="font-headline-md text-headline-md text-on-surface mb-1">Drop your resume here</h2>
+        <p class="font-body-md text-body-md text-on-surface-variant mb-3">Support PDF (Max 10MB)</p>
         <div class="px-4 py-2 border border-outline-variant rounded-full text-on-surface-variant font-label-md text-label-md">or click to browse files</div>
         <div id="fileInfo" hidden class="mt-4 flex items-center gap-3 px-4 py-2 bg-surface-container rounded-lg">
           <span class="material-symbols-outlined text-primary text-sm">description</span>
@@ -106,7 +124,7 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
       </div>
 
       <div class="flex flex-col items-center gap-4">
-        <button class="w-full md:w-auto md:min-w-[300px] bg-primary-container text-on-primary-container px-12 py-6 rounded-xl font-bold text-xl uppercase tracking-widest brutal-shadow hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] active:translate-y-0 active:translate-x-0 active:shadow-none transition-all" id="roast-btn">
+        <button class="w-full md:w-auto md:min-w-[260px] bg-primary-container text-on-primary-container px-10 py-5 rounded-xl font-bold text-lg uppercase tracking-widest brutal-shadow hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:translate-y-0 active:translate-x-0 active:shadow-none transition-all" id="roast-btn">
           Roast My Resume
         </button>
         <p class="font-label-md text-label-md text-on-surface-variant italic opacity-60">Prepare for emotional damage.</p>
@@ -121,18 +139,18 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
       </div>
     </div>
 
-    <section class="mt-24 grid grid-cols-1 md:grid-cols-3 gap-gutter">
-      <div class="bg-[#121212] border border-[#27272A] p-8 rounded-xl space-y-4">
+    <section class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-gutter">
+      <div class="bg-[#121212] border border-[#27272A] p-6 rounded-xl space-y-3">
         <span class="material-symbols-outlined text-primary">bolt</span>
         <h3 class="font-headline-md text-headline-md text-on-surface">Instant Analysis</h3>
         <p class="font-body-md text-body-md text-on-surface-variant">Get a comprehensive breakdown of your resume's weaknesses in under 30 seconds.</p>
       </div>
-      <div class="bg-[#121212] border border-[#27272A] p-8 rounded-xl space-y-4">
+      <div class="bg-[#121212] border border-[#27272A] p-6 rounded-xl space-y-3">
         <span class="material-symbols-outlined text-primary">psychology</span>
         <h3 class="font-headline-md text-headline-md text-on-surface">ATS Optimization</h3>
         <p class="font-body-md text-body-md text-on-surface-variant">See exactly where automated tracking systems fail to parse your data.</p>
       </div>
-      <div class="bg-[#121212] border border-[#27272A] p-8 rounded-xl space-y-4">
+      <div class="bg-[#121212] border border-[#27272A] p-6 rounded-xl space-y-3">
         <span class="material-symbols-outlined text-primary">contract_edit</span>
         <h3 class="font-headline-md text-headline-md text-on-surface">The Fix</h3>
         <p class="font-body-md text-body-md text-on-surface-variant">Actionable suggestions to turn your "Roasted" sections into professional powerhouses.</p>
@@ -140,7 +158,7 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
     </section>
   </main>
 
-  <footer class="w-full py-12 mt-16 bg-surface border-t border-outline-variant">
+  <footer class="w-full py-10 mt-12 bg-surface border-t border-outline-variant">
     <div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop gap-gutter max-w-container-max mx-auto">
       <div class="space-y-2 text-center md:text-left">
         <div class="font-headline-md text-primary font-bold">RoastMyCV</div>
@@ -158,8 +176,8 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
 <!-- ==================== RESULTS PAGE ==================== -->
 <div id="results" hidden>
   <header class="fixed top-0 w-full z-50 bg-surface border-b border-outline-variant">
-    <div class="flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto">
-      <div class="font-display-xl text-primary font-black tracking-tighter cursor-pointer" id="resultsLogo">RoastMyCV</div>
+    <div class="flex justify-between items-center px-margin-desktop py-3 max-w-container-max mx-auto">
+      <div class="font-display-xl text-primary font-black tracking-tighter cursor-pointer" id="resultsLogo" style="font-size: 1.4rem;">RoastMyCV</div>
       <div class="flex items-center gap-4">
         <button class="bg-primary-container text-on-primary px-6 py-2 rounded-lg font-bold text-sm hover:opacity-90 transition-opacity" id="fixBtn" hidden>✨ Fix My Resume</button>
         <button class="border border-outline-variant text-on-surface-variant px-4 py-2 rounded-lg font-bold text-sm hover:bg-surface-container transition-colors" id="copyResultBtn">📋 Copy</button>
@@ -167,61 +185,61 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
     </div>
   </header>
 
-  <main class="pt-24 pb-16 px-margin-desktop max-w-container-max mx-auto min-h-screen" id="resultsScroll">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+  <main class="pt-20 pb-12 px-margin-desktop max-w-container-max mx-auto min-h-screen" id="resultsScroll">
+    <div class="results-grid">
       <!-- Left Column: Score -->
-      <aside class="lg:col-span-3 sticky top-28 space-y-gutter" id="scoreCard" hidden>
-        <div class="bg-[#121212] brutalist-border p-8 rounded-xl flex flex-col items-center text-center">
-          <h3 class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant mb-6">Roast Score</h3>
-          <div class="relative w-40 h-40 flex items-center justify-center">
+      <aside class="results-grid-left sticky top-24 space-y-gutter" id="scoreCard" hidden>
+        <div class="bg-[#121212] brutalist-border p-5 rounded-xl flex flex-col items-center text-center">
+          <h3 class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant mb-4">Roast Score</h3>
+          <div class="relative w-32 h-32 flex items-center justify-center">
             <svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 160 160">
               <circle class="text-surface-container-highest" cx="80" cy="80" fill="transparent" r="68" stroke="currentColor" stroke-width="10"/>
               <circle class="score-ring-fill" id="scoreRingFill" cx="80" cy="80" fill="transparent" r="68" stroke="#ff6b00" stroke-dasharray="427" stroke-dashoffset="427" stroke-linecap="round" stroke-width="10"/>
             </svg>
             <div class="flex flex-col items-center">
-              <span class="text-5xl font-black text-primary font-display-xl" id="scoreValue">0</span>
-              <span class="text-sm font-bold opacity-50">/ 100</span>
+              <span class="text-3xl font-black text-primary font-display-xl" id="scoreValue">0</span>
+              <span class="text-xs font-bold opacity-50">/ 100</span>
             </div>
           </div>
         </div>
-        <div class="bg-[#121212] brutalist-border p-6 rounded-xl" id="tipsCard" hidden>
-          <div class="flex items-center gap-2 mb-4">
-            <span class="material-symbols-outlined text-primary">local_fire_department</span>
+        <div class="bg-[#121212] brutalist-border p-4 rounded-xl" id="tipsCard" hidden>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="material-symbols-outlined text-primary text-lg">local_fire_department</span>
             <h4 class="font-label-md text-label-md uppercase">Biggest Mistakes 🚨</h4>
           </div>
-          <ul class="text-sm text-on-surface-variant leading-relaxed space-y-3 list-disc list-inside marker:text-primary" id="tipsList"></ul>
+          <ul class="text-xs text-on-surface-variant leading-relaxed space-y-2 list-disc list-inside marker:text-primary" id="tipsList"></ul>
         </div>
       </aside>
 
       <!-- Center Column: Content -->
-      <section class="lg:col-span-6 space-y-6" id="roastContent">
-        <div class="flex justify-between items-end mb-4 px-2">
+      <section class="results-grid-center space-y-4" id="roastContent">
+        <div class="flex justify-between items-end mb-3 px-1">
           <div>
             <h1 class="font-headline-lg text-headline-lg" id="contentTitle">🔥 The Roast</h1>
-            <p class="text-on-surface-variant" id="contentSubtitle">The brutal truth about your resume.</p>
+            <p class="text-sm text-on-surface-variant" id="contentSubtitle">The brutal truth about your resume.</p>
           </div>
         </div>
-        <div class="bg-[#121212] brutalist-border rounded-xl p-8 md:p-12 min-h-[400px] shadow-2xl relative overflow-hidden" id="resultsBody">
-          <div class="space-y-6 max-w-2xl mx-auto rmd text-on-surface-variant leading-relaxed">
+        <div class="bg-[#121212] brutalist-border rounded-xl p-6 md:p-8 min-h-[300px] shadow-2xl relative overflow-hidden" id="resultsBody">
+          <div class="space-y-4 max-w-none mx-auto rmd text-on-surface-variant leading-relaxed">
             <p class="opacity-50">Waiting for results...</p>
           </div>
         </div>
       </section>
 
       <!-- Right Column: Donation -->
-      <aside class="lg:col-span-3 space-y-gutter" id="fixContent">
-        <div class="bg-[#121212] brutalist-border p-6 rounded-xl">
-          <a href="https://ko-fi.com/roastmycv" target="_blank" rel="noopener" class="w-full flex items-center justify-center gap-3 bg-primary-container text-on-primary-container py-4 px-6 rounded-xl font-black text-lg hard-shadow-orange hover:translate-y-[-4px] hover:translate-x-[-4px] hover:shadow-[8px_8px_0px_0px_#ff6b00] transition-all border-4 border-primary-container no-underline">
-            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_cafe</span>
-            ☕ Buy Me a Coffee
+      <aside class="results-grid-right space-y-gutter" id="fixContent">
+        <div class="bg-[#121212] brutalist-border p-5 rounded-xl">
+          <a href="https://ko-fi.com/roastmycv" target="_blank" rel="noopener" class="w-full flex items-center justify-center gap-2 bg-error text-on-error py-3 px-4 rounded-xl font-black text-base hard-shadow hover:translate-y-[-3px] hover:translate-x-[-3px] hover:shadow-[6px_6px_0px_0px_#ffb4ab] transition-all border-4 border-on-error no-underline">
+            <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">local_cafe</span>
+            DONATE OR DIE
           </a>
-          <p class="text-center text-[11px] mt-4 font-bold tracking-widest opacity-60">Help keep RoastMyCV free 🙏</p>
+          <p class="text-center text-[10px] mt-3 uppercase font-bold tracking-widest opacity-50">Support the Brutality</p>
         </div>
       </aside>
     </div>
   </main>
 
-  <footer class="w-full py-12 mt-16 bg-surface border-t border-outline-variant">
+  <footer class="w-full py-10 mt-12 bg-surface border-t border-outline-variant">
     <div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop gap-gutter max-w-container-max mx-auto">
       <div class="flex flex-col items-center md:items-start gap-2">
         <div class="font-headline-md text-primary font-bold">RoastMyCV</div>
