@@ -62,14 +62,14 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
 .toggle-btn-inactive:hover { background: rgba(255,107,0,0.1); }
 
 /* Ko-fi popup */
-.kofi-popup { position: fixed; bottom: 24px; right: 24px; z-index: 1000; animation: kofiSlideIn 0.4s ease; max-width: 260px; }
-@keyframes kofiSlideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-.kofi-popup-content { background: #1d100a; border: 1px solid #ff6b00; border-radius: 12px; padding: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); position: relative; }
-.kofi-popup-close { position: absolute; top: 8px; right: 10px; background: none; border: none; color: #a98a7d; cursor: pointer; font-size: 16px; padding: 2px 6px; border-radius: 4px; transition: all 0.2s; line-height: 1; }
-.kofi-popup-close:hover { color: #fff; background: rgba(255,255,255,0.1); }
-.kofi-popup-title { font-size: 15px; font-weight: 700; color: #f8ddd2; margin: 0 0 4px; }
-.kofi-popup-subtitle { font-size: 12px; color: #a98a7d; margin: 0 0 14px; }
-.kofi-popup-btn { display: block; text-align: center; background: #ff6b00; color: #fff; padding: 10px 16px; border-radius: 8px; font-size: 14px; font-weight: 700; text-decoration: none; transition: all 0.2s; }
+.kofi-popup { position: fixed; bottom: 24px; right: 24px; z-index: 1000; animation: kofiSlideUp 0.4s ease; width: 280px; }
+@keyframes kofiSlideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.kofi-popup-content { background: #1a1a1a; border-top: 3px solid #ff6b00; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); position: relative; }
+.kofi-popup-close { position: absolute; top: 8px; right: 10px; background: none; border: none; color: #888; cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; transition: all 0.2s; line-height: 1; }
+.kofi-popup-close:hover { color: #fff; }
+.kofi-popup-title { font-size: 16px; font-weight: 700; color: #fff; margin: 0 0 4px; }
+.kofi-popup-subtitle { font-size: 13px; color: #888; margin: 0 0 14px; }
+.kofi-popup-btn { display: block; text-align: center; background: #ff6b00; color: #fff; padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 700; text-decoration: none; transition: all 0.2s; }
 .kofi-popup-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,107,0,0.3); }
 
 /* Progress bar */
@@ -202,9 +202,7 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
         <button class="toggle-btn toggle-btn-inactive" id="fixToggleBtn">✨ Fix My Resume</button>
       </div>
       <div class="flex items-center gap-3">
-        <a href="https://ko-fi.com/roastmycv" target="_blank" rel="noopener" class="text-primary-container hover:text-primary transition-colors" title="Support on Ko-fi">
-          <span class="material-symbols-outlined" style="font-size: 22px; font-variation-settings: 'FILL' 1;">local_cafe</span>
-        </a>
+        <a href="https://ko-fi.com/roastmycv" target="_blank" rel="noopener" class="border border-[#ff6b00] text-[#ff6b00] px-4 py-1.5 rounded-lg font-bold text-xs hover:bg-[#ff6b00] hover:text-white transition-all no-underline">☕ Support</a>
         <button class="border border-outline-variant text-on-surface-variant px-3 py-1.5 rounded-lg font-bold text-xs hover:bg-surface-container transition-colors" id="copyResultBtn">📋 Copy</button>
       </div>
     </div>
@@ -256,7 +254,7 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
   <div class="kofi-popup" id="kofiPopup" hidden>
     <div class="kofi-popup-content">
       <button class="kofi-popup-close" id="kofiPopupClose">✕</button>
-      <p class="kofi-popup-title">☕ Did RoastMyCV help you?</p>
+      <p class="kofi-popup-title">Enjoying RoastMyCV? ☕</p>
       <p class="kofi-popup-subtitle">Help keep it free for everyone</p>
       <a href="https://ko-fi.com/roastmycv" target="_blank" rel="noopener" class="kofi-popup-btn">Buy Me a Coffee</a>
     </div>
