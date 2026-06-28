@@ -61,16 +61,19 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
 .toggle-btn-inactive { background: transparent; color: #ff6b00; }
 .toggle-btn-inactive:hover { background: rgba(255,107,0,0.1); }
 
-/* Ko-fi popup */
-.kofi-popup { position: fixed; bottom: 24px; right: 24px; z-index: 1000; animation: kofiSlideUp 0.4s ease; width: 280px; }
+/* Instagram popup */
+.ig-popup { position: fixed; bottom: 24px; right: 24px; z-index: 1000; animation: kofiSlideUp 0.4s ease; width: 280px; }
 @keyframes kofiSlideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-.kofi-popup-content { background: #1a1a1a; border-top: 3px solid #ff6b00; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); position: relative; }
-.kofi-popup-close { position: absolute; top: 8px; right: 10px; background: none; border: none; color: #888; cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; transition: all 0.2s; line-height: 1; }
-.kofi-popup-close:hover { color: #fff; }
-.kofi-popup-title { font-size: 16px; font-weight: 700; color: #fff; margin: 0 0 4px; }
-.kofi-popup-subtitle { font-size: 13px; color: #888; margin: 0 0 14px; }
-.kofi-popup-btn { display: block; text-align: center; background: #ff6b00; color: #fff; padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 700; text-decoration: none; transition: all 0.2s; }
-.kofi-popup-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,107,0,0.3); }
+.ig-popup-content { background: #1a1a1a; border-top: 3px solid #ff6b00; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); position: relative; }
+.ig-popup-close { position: absolute; top: 8px; right: 10px; background: none; border: none; color: #888; cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 4px; transition: all 0.2s; line-height: 1; }
+.ig-popup-close:hover { color: #fff; }
+.ig-popup-title { font-size: 16px; font-weight: 700; color: #fff; margin: 0 0 4px; }
+.ig-popup-subtitle { font-size: 13px; color: #888; margin: 0 0 14px; }
+.ig-popup-btn { display: block; text-align: center; background: linear-gradient(135deg, #e1306c, #833ab4); color: #fff; padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 700; text-decoration: none; transition: all 0.2s; }
+.ig-popup-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(225,48,108,0.4); }
+
+.ig-btn-gradient { background: linear-gradient(135deg, #e1306c, #833ab4); color: #fff; border: none; }
+.ig-btn-gradient:hover { opacity: 0.9; box-shadow: 0 2px 8px rgba(225,48,108,0.3); }
 
 /* Progress bar */
 .progress-bar { position: fixed; top: 0; left: 0; width: 100%; height: 2px; background: #0A0A0A; z-index: 9999; overflow: hidden; }
@@ -117,7 +120,7 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
     <div class="flex justify-between items-center px-margin-desktop py-3 max-w-container-max mx-auto">
       <div class="font-display-xl text-primary font-black tracking-tighter" style="font-size: 1.4rem;">RoastMyCV</div>
       <div class="flex gap-8 items-center">
-        <a href="https://ko-fi.com/roastmycv" target="_blank" rel="noopener" class="border border-primary-container text-primary-container px-5 py-2 rounded-lg font-label-md text-label-md font-bold hover:bg-primary-container hover:text-on-primary-container transition-all">☕ Support on Ko-fi</a>
+        <a href="https://instagram.com/3iik.dev" target="_blank" rel="noopener" class="ig-btn-gradient px-5 py-2 rounded-lg font-label-md text-label-md font-bold transition-all">📸 Follow</a>
       </div>
     </div>
   </nav>
@@ -195,12 +198,13 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
         <button class="toggle-btn toggle-btn-inactive" id="fixToggleBtn">✨ Fix My Resume</button>
       </div>
       <div class="flex items-center gap-3">
-        <a href="https://ko-fi.com/roastmycv" target="_blank" rel="noopener" class="border border-[#ff6b00] text-[#ff6b00] px-4 py-1.5 rounded-lg font-bold text-xs hover:bg-[#ff6b00] hover:text-white transition-all no-underline">☕ Support</a>
+        <a href="https://instagram.com/3iik.dev" target="_blank" rel="noopener" class="ig-btn-gradient px-4 py-1.5 rounded-lg font-bold text-xs transition-all no-underline">📸 Follow</a>
         <div class="relative" id="shareContainer">
           <button class="bg-[#121212] text-white border border-[#333] px-4 py-1.5 rounded-lg font-bold text-xs hover:bg-[#1a1a1a] transition-all whitespace-nowrap" id="shareBtn">🔗 Share</button>
           <div class="share-dropdown" id="shareDropdown" hidden>
             <a href="https://twitter.com/intent/tweet?text=I%20just%20got%20my%20resume%20brutally%20roasted%20by%20AI%20%F0%9F%98%82%20Try%20RoastMyCV%20for%20free%20%E2%86%92%20https%3A%2F%2Froastmycv-production.up.railway.app" target="_blank" rel="noopener" class="share-dropdown-item">🐦 Share on X (Twitter)</a>
             <a href="https://wa.me/?text=Check%20this%20out%2C%20it%20roasts%20your%20resume%20and%20fixes%20it%20for%20free%20%F0%9F%94%A5%20%E2%86%92%20https%3A%2F%2Froastmycv-production.up.railway.app" target="_blank" rel="noopener" class="share-dropdown-item">💬 Share on WhatsApp</a>
+            <a href="https://instagram.com/3iik.dev" target="_blank" rel="noopener" class="share-dropdown-item">📸 Follow the creator on Instagram</a>
             <button class="share-dropdown-item" id="shareCopyLink">📋 Copy Link</button>
           </div>
         </div>
@@ -251,12 +255,12 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
     </div>
   </main>
 
-  <div class="kofi-popup" id="kofiPopup" hidden>
-    <div class="kofi-popup-content">
-      <button class="kofi-popup-close" id="kofiPopupClose">✕</button>
-      <p class="kofi-popup-title">Enjoying RoastMyCV? ☕</p>
-      <p class="kofi-popup-subtitle">Help keep it free for everyone</p>
-      <a href="https://ko-fi.com/roastmycv" target="_blank" rel="noopener" class="kofi-popup-btn">Buy Me a Coffee</a>
+  <div class="ig-popup" id="kofiPopup" hidden>
+    <div class="ig-popup-content">
+      <button class="ig-popup-close" id="kofiPopupClose">✕</button>
+      <p class="ig-popup-title">Enjoying RoastMyCV? 🔥</p>
+      <p class="ig-popup-subtitle">Follow me on Instagram to support!</p>
+      <a href="https://instagram.com/3iik.dev" target="_blank" rel="noopener" class="ig-popup-btn">📸 Follow on Instagram</a>
     </div>
   </div>
 
