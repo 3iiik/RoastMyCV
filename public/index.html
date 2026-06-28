@@ -13,6 +13,7 @@
 </head>
 <body>
 
+  <div class="progress-bar" id="progressBar" hidden></div>
   <div class="container">
     <header>
       <h1 class="logo">
@@ -41,10 +42,7 @@
           <span class="file-name" id="fileName"></span>
           <button class="btn-remove" id="removeFile" title="Remove file">✕</button>
         </div>
-        <button class="btn-primary" id="analyzeBtn" disabled>
-          <span class="btn-text">🔥 Roast My Resume</span>
-          <span class="btn-spinner" hidden></span>
-        </button>
+        <button class="btn-primary" id="analyzeBtn" disabled>🔥 Roast My Resume</button>
       </div>
 
       <div class="loading-section" id="loadingSection" hidden>
@@ -67,7 +65,8 @@
               <span class="result-emoji">🔥</span>
               <h2 class="result-title">The Roast</h2>
             </div>
-            <div class="result-body" id="roastBody"></div>
+            <div class="result-body result-body--scrollable" id="roastBody"></div>
+            <button class="btn-read-more" id="readMoreBtn" hidden>▼ Read More</button>
             <button class="btn-copy" data-target="roast">📋 Copy Roast</button>
           </div>
           <div class="result-card result-card--fix" id="fixCard" hidden>

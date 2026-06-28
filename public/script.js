@@ -25,8 +25,6 @@ const elements = {
   fileName: document.getElementById('fileName'),
   removeFile: document.getElementById('removeFile'),
   analyzeBtn: document.getElementById('analyzeBtn'),
-  btnText: document.querySelector('.btn-text'),
-  btnSpinner: document.querySelector('.btn-spinner'),
   uploadSection: document.getElementById('uploadSection'),
   loadingSection: document.getElementById('loadingSection'),
   loadingMessage: document.getElementById('loadingMessage'),
@@ -43,6 +41,8 @@ const elements = {
   shareWhatsapp: document.getElementById('shareWhatsapp'),
   toast: document.getElementById('toast'),
   toastMessage: document.getElementById('toastMessage'),
+  progressBar: document.getElementById('progressBar'),
+  readMoreBtn: document.getElementById('readMoreBtn'),
 };
 
 let currentFile = null;
@@ -93,6 +93,12 @@ document.querySelectorAll('.btn-copy').forEach((btn) => {
     if (!text) return;
     copyToClipboard(text, btn);
   });
+});
+
+elements.readMoreBtn.addEventListener('click', () => {
+  const body = elements.roastBody;
+  const isExpanded = body.classList.toggle('expanded');
+  elements.readMoreBtn.textContent = isExpanded ? '▲ Show Less' : '▼ Read More';
 });
 
 elements.shareTwitter.addEventListener('click', (e) => {
@@ -219,8 +225,18 @@ async function extractTextFromPDF(file) {
 
 function displayRoast(roast) {
   elements.roastBody.innerHTML = renderMarkdown(roast);
+  elements.roastBody.classList.remove('expanded');
   elements.resultsSection.hidden = false;
   elements.fixBtn.hidden = false;
+
+  requestAnimationFrame(() => {
+    if (elements.roastBody.scrollHeight > elements.roastBody.clientHeight) {
+      elements.readMoreBtn.hidden = false;
+    } else {
+      elements.readMoreBtn.hidden = true;
+    }
+  });
+
   elements.resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
@@ -288,6 +304,7 @@ function renderInline(text) {
 function showLoading(messages) {
   elements.uploadSection.hidden = true;
   elements.loadingSection.hidden = false;
+  elements.progressBar.hidden = false;
   let idx = 0;
   elements.loadingMessage.textContent = messages[0];
   loadingInterval = setInterval(() => {
@@ -301,6 +318,7 @@ function hideLoading() {
   loadingInterval = null;
   elements.loadingSection.hidden = true;
   elements.uploadSection.hidden = false;
+  elements.progressBar.hidden = true;
 }
 
 function showError(msg) {
@@ -319,6 +337,8 @@ function hideResults() {
   elements.fixCard.hidden = true;
   elements.fixBtn.hidden = true;
   elements.supportSection.hidden = true;
+  elements.readMoreBtn.hidden = true;
+  elements.roastBody.classList.remove('expanded');
 }
 
 function copyToClipboard(text, btn) {
