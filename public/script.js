@@ -36,7 +36,8 @@ const elements = {
   resultsBody: document.getElementById('resultsBody'),
   resultsScroll: document.getElementById('resultsScroll'),
   resultsLogo: document.getElementById('resultsLogo'),
-  toggleBtn: document.getElementById('fixBtn'),
+  roastToggleBtn: document.getElementById('roastToggleBtn'),
+  fixToggleBtn: document.getElementById('fixToggleBtn'),
   copyResultBtn: document.getElementById('copyResultBtn'),
   scoreCard: document.getElementById('scoreCard'),
   scoreRingFill: document.getElementById('scoreRingFill'),
@@ -48,6 +49,8 @@ const elements = {
   progressBar: document.getElementById('progressBar'),
   contentTitle: document.getElementById('contentTitle'),
   contentSubtitle: document.getElementById('contentSubtitle'),
+  kofiPopup: document.getElementById('kofiPopup'),
+  kofiPopupClose: document.getElementById('kofiPopupClose'),
 };
 
 let currentFile = null;
@@ -87,7 +90,8 @@ elements.removeFile.addEventListener('click', resetUpload);
 
 elements.analyzeBtn.addEventListener('click', analyzeResume);
 
-elements.toggleBtn.addEventListener('click', toggleView);
+elements.roastToggleBtn.addEventListener('click', () => showRoastView());
+elements.fixToggleBtn.addEventListener('click', () => showFixView());
 
 elements.resultsLogo.addEventListener('click', resetUpload);
 
@@ -235,8 +239,7 @@ function displayRoast() {
   elements.contentSubtitle.textContent = 'The brutal truth about your resume.';
   elements.uploadPage.hidden = true;
   elements.resultsPage.hidden = false;
-  elements.toggleBtn.hidden = false;
-  elements.toggleBtn.textContent = '✨ Fix My Resume';
+  setActiveToggle('roast');
 
   if (currentScore !== null) {
     elements.scoreCard.hidden = false;
@@ -248,6 +251,40 @@ function displayRoast() {
   }
 
   elements.resultsScroll.scrollTop = 0;
+  startKofiPopupTimer();
+}
+
+function setActiveToggle(view) {
+  if (view === 'roast') {
+    elements.roastToggleBtn.className = 'toggle-btn toggle-btn-active';
+    elements.fixToggleBtn.className = 'toggle-btn toggle-btn-inactive';
+  } else {
+    elements.roastToggleBtn.className = 'toggle-btn toggle-btn-inactive';
+    elements.fixToggleBtn.className = 'toggle-btn toggle-btn-active';
+  }
+}
+
+function showRoastView() {
+  if (!currentRoast) return;
+  isShowingFix = false;
+  elements.resultsBody.innerHTML = renderMarkdown(currentRoast);
+  elements.contentTitle.textContent = '🔥 The Roast';
+  elements.contentSubtitle.textContent = 'The brutal truth about your resume.';
+  setActiveToggle('roast');
+  elements.resultsScroll.scrollTop = 0;
+}
+
+function showFixView() {
+  if (currentFix) {
+    isShowingFix = true;
+    elements.resultsBody.innerHTML = renderMarkdown(currentFix);
+    elements.contentTitle.textContent = '✨ The Fix';
+    elements.contentSubtitle.textContent = 'Your polished and improved resume.';
+    setActiveToggle('fix');
+    elements.resultsScroll.scrollTop = 0;
+  } else {
+    fixResume();
+  }
 }
 
 function updateScoreRing(score) {
@@ -266,24 +303,7 @@ function displayFix() {
   elements.resultsBody.innerHTML = renderMarkdown(currentFix);
   elements.contentTitle.textContent = '✨ The Fix';
   elements.contentSubtitle.textContent = 'Your polished and improved resume.';
-  elements.toggleBtn.textContent = '🔥 See Roast Again';
-  elements.resultsScroll.scrollTop = 0;
-}
-
-function toggleView() {
-  if (isShowingFix) {
-    isShowingFix = false;
-    elements.resultsBody.innerHTML = renderMarkdown(currentRoast);
-    elements.toggleBtn.textContent = '✨ Fix My Resume';
-  } else {
-    if (currentFix) {
-      isShowingFix = true;
-      elements.resultsBody.innerHTML = renderMarkdown(currentFix);
-      elements.toggleBtn.textContent = '🔥 See Roast Again';
-    } else {
-      fixResume();
-    }
-  }
+  setActiveToggle('fix');
   elements.resultsScroll.scrollTop = 0;
 }
 
@@ -374,9 +394,9 @@ function hideError() {
 function hideResults() {
   elements.resultsPage.hidden = true;
   elements.uploadPage.hidden = false;
-  elements.toggleBtn.hidden = true;
   elements.scoreCard.hidden = true;
   elements.tipsCard.hidden = true;
+  hideKofiPopup();
 }
 
 function copyToClipboard(text) {
@@ -401,3 +421,21 @@ function showToast(msg) {
     elements.toast.hidden = true;
   }, 3000);
 }
+
+let kofiPopupTimer = null;
+
+function startKofiPopupTimer() {
+  clearTimeout(kofiPopupTimer);
+  kofiPopupTimer = setTimeout(() => {
+    if (!elements.resultsPage.hidden) {
+      elements.kofiPopup.hidden = false;
+    }
+  }, 30000);
+}
+
+function hideKofiPopup() {
+  clearTimeout(kofiPopupTimer);
+  elements.kofiPopup.hidden = true;
+}
+
+elements.kofiPopupClose.addEventListener('click', hideKofiPopup);
