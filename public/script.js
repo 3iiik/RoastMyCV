@@ -19,6 +19,8 @@ const FIX_LOADING_MESSAGES = [
 const SHARE_URL = window.location.origin;
 
 const elements = {
+  uploadPage: document.getElementById('uploadPage'),
+  resultsPage: document.getElementById('resultsPage'),
   uploadZone: document.getElementById('uploadZone'),
   fileInput: document.getElementById('fileInput'),
   fileInfo: document.getElementById('fileInfo'),
@@ -31,24 +33,24 @@ const elements = {
   errorSection: document.getElementById('errorSection'),
   errorText: document.getElementById('errorText'),
   retryBtn: document.getElementById('retryBtn'),
-  resultsSection: document.getElementById('resultsSection'),
-  roastBody: document.getElementById('roastBody'),
-  fixBody: document.getElementById('fixBody'),
-  fixCard: document.getElementById('fixCard'),
-  fixBtn: document.getElementById('fixBtn'),
+  resultsBody: document.getElementById('resultsBody'),
+  resultsScroll: document.getElementById('resultsScroll'),
+  resultsLogo: document.getElementById('resultsLogo'),
+  toggleBtn: document.getElementById('toggleBtn'),
+  copyResultBtn: document.getElementById('copyResultBtn'),
   supportSection: document.getElementById('supportSection'),
   shareTwitter: document.getElementById('shareTwitter'),
   shareWhatsapp: document.getElementById('shareWhatsapp'),
   toast: document.getElementById('toast'),
   toastMessage: document.getElementById('toastMessage'),
   progressBar: document.getElementById('progressBar'),
-  readMoreBtn: document.getElementById('readMoreBtn'),
 };
 
 let currentFile = null;
 let currentResumeText = null;
 let currentRoast = null;
 let currentFix = null;
+let isShowingFix = false;
 let loadingInterval = null;
 
 elements.uploadZone.addEventListener('click', () => elements.fileInput.click());
@@ -79,39 +81,32 @@ elements.removeFile.addEventListener('click', resetUpload);
 
 elements.analyzeBtn.addEventListener('click', analyzeResume);
 
-elements.fixBtn.addEventListener('click', fixResume);
+elements.toggleBtn.addEventListener('click', toggleView);
+
+elements.resultsLogo.addEventListener('click', resetUpload);
+
+elements.copyResultBtn.addEventListener('click', () => {
+  const text = isShowingFix ? currentFix : currentRoast;
+  if (!text) return;
+  copyToClipboard(text);
+});
 
 elements.retryBtn.addEventListener('click', () => {
   hideError();
   if (currentFile) analyzeResume();
 });
 
-document.querySelectorAll('.btn-copy').forEach((btn) => {
-  btn.addEventListener('click', () => {
-    const target = btn.dataset.target;
-    const text = target === 'roast' ? currentRoast : currentFix;
-    if (!text) return;
-    copyToClipboard(text, btn);
-  });
-});
-
-elements.readMoreBtn.addEventListener('click', () => {
-  const body = elements.roastBody;
-  const isExpanded = body.classList.toggle('expanded');
-  elements.readMoreBtn.textContent = isExpanded ? '▲ Show Less' : '▼ Read More';
-});
-
 elements.shareTwitter.addEventListener('click', (e) => {
   e.preventDefault();
   const url = SHARE_URL;
-  const text = encodeURIComponent(`I just got my resume roasted by AI 😂 Try RoastMyCV for free →`);
+  const text = encodeURIComponent('I just got my resume roasted by AI 😂 Try RoastMyCV for free →');
   window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`, '_blank');
 });
 
 elements.shareWhatsapp.addEventListener('click', (e) => {
   e.preventDefault();
   const url = SHARE_URL;
-  const text = encodeURIComponent(`Check this out, it roasts your resume and fixes it for free 🔥`);
+  const text = encodeURIComponent('Check this out, it roasts your resume and fixes it for free 🔥');
   window.open(`https://wa.me/?text=${text}%20${encodeURIComponent(url)}`, '_blank');
 });
 
@@ -135,12 +130,16 @@ function resetUpload() {
   currentResumeText = null;
   currentRoast = null;
   currentFix = null;
+  isShowingFix = false;
   elements.fileInput.value = '';
   elements.fileInfo.hidden = true;
   elements.fileName.textContent = '';
   elements.analyzeBtn.disabled = true;
   hideResults();
   hideError();
+  elements.uploadPage.hidden = false;
+  elements.resultsPage.hidden = true;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 async function analyzeResume() {
@@ -172,7 +171,7 @@ async function analyzeResume() {
     }
 
     currentRoast = data.text;
-    displayRoast(currentRoast);
+    displayRoast();
   } catch (err) {
     showError(err.message || 'Something went wrong. Please check your connection and try again.');
   } finally {
@@ -200,7 +199,7 @@ async function fixResume() {
     }
 
     currentFix = data.text;
-    displayFix(currentFix);
+    displayFix();
   } catch (err) {
     showError(err.message || 'Something went wrong. Please check your connection and try again.');
   } finally {
@@ -223,75 +222,84 @@ async function extractTextFromPDF(file) {
   return fullText.trim();
 }
 
-function displayRoast(roast) {
-  elements.roastBody.innerHTML = renderMarkdown(roast);
-  elements.roastBody.classList.remove('expanded');
-  elements.resultsSection.hidden = false;
-  elements.fixBtn.hidden = false;
-
-  requestAnimationFrame(() => {
-    if (elements.roastBody.scrollHeight > elements.roastBody.clientHeight) {
-      elements.readMoreBtn.hidden = false;
-    } else {
-      elements.readMoreBtn.hidden = true;
-    }
-  });
-
-  elements.resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+function displayRoast() {
+  isShowingFix = false;
+  elements.resultsBody.innerHTML = renderMarkdown(currentRoast);
+  elements.uploadPage.hidden = true;
+  elements.resultsPage.hidden = false;
+  elements.toggleBtn.hidden = false;
+  elements.toggleBtn.textContent = '✨ Fix My Resume';
+  elements.supportSection.hidden = true;
+  elements.resultsScroll.scrollTop = 0;
 }
 
-function displayFix(fix) {
-  elements.fixBody.innerHTML = renderMarkdown(fix);
-  elements.fixCard.hidden = false;
-  elements.fixBtn.hidden = true;
+function displayFix() {
+  isShowingFix = true;
+  elements.resultsBody.innerHTML = renderMarkdown(currentFix);
+  elements.toggleBtn.textContent = '🔥 See Roast Again';
   elements.supportSection.hidden = false;
-  elements.fixCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  elements.resultsScroll.scrollTop = 0;
+}
+
+function toggleView() {
+  if (isShowingFix) {
+    isShowingFix = false;
+    elements.resultsBody.innerHTML = renderMarkdown(currentRoast);
+    elements.toggleBtn.textContent = '✨ Fix My Resume';
+  } else {
+    if (currentFix) {
+      isShowingFix = true;
+      elements.resultsBody.innerHTML = renderMarkdown(currentFix);
+      elements.toggleBtn.textContent = '🔥 See Roast Again';
+    } else {
+      fixResume();
+    }
+  }
+  elements.resultsScroll.scrollTop = 0;
 }
 
 function renderMarkdown(text) {
-  return text
-    .split(/\n{2,}/)
-    .map((block) => {
-      block = block.trim();
-      if (!block) return '';
+  return `<div class="rmd">${
+    text
+      .split(/\n{2,}/)
+      .map((block) => {
+        block = block.trim();
+        if (!block) return '';
 
-      // Headings
-      if (/^### (.+)/.test(block)) {
-        return `<h3>${block.replace(/^### /, '')}</h3>`;
-      }
-      if (/^## (.+)/.test(block)) {
-        return `<h2>${block.replace(/^## /, '')}</h2>`;
-      }
-      if (/^# (.+)/.test(block)) {
-        return `<h2>${block.replace(/^# /, '')}</h2>`;
-      }
-
-      // Bold headings (e.g. **Overall Impression**)
-      if (/^\*\*(.+)\*\*/.test(block)) {
-        const match = block.match(/^\*\*(.+)\*\*(.*)/);
-        if (match) {
-          const rest = renderInline(match[2]);
-          return `<h2>${match[1]}</h2>${rest ? `<p>${rest}</p>` : ''}`;
+        if (/^### (.+)/.test(block)) {
+          return `<h3>${block.replace(/^### /, '')}</h3>`;
         }
-      }
+        if (/^## (.+)/.test(block)) {
+          return `<h2>${block.replace(/^## /, '')}</h2>`;
+        }
+        if (/^# (.+)/.test(block)) {
+          return `<h2>${block.replace(/^# /, '')}</h2>`;
+        }
 
-      // Unordered list
-      if (/^[-*] /.test(block)) {
-        const items = block.split('\n').map((line) => {
-          const clean = line.replace(/^[-*] /, '').trim();
-          return clean ? `<li>${renderInline(clean)}</li>` : '';
-        }).filter(Boolean);
-        return `<ul>${items.join('')}</ul>`;
-      }
+        if (/^\*\*(.+)\*\*/.test(block)) {
+          const match = block.match(/^\*\*(.+)\*\*(.*)/);
+          if (match) {
+            const rest = renderInline(match[2]);
+            return `<h2>${match[1]}</h2>${rest ? `<p>${rest}</p>` : ''}`;
+          }
+        }
 
-      // Paragraph
-      const lines = block.split('\n').filter(Boolean);
-      if (lines.length === 1) {
-        return `<p>${renderInline(lines[0])}</p>`;
-      }
-      return lines.map((l) => `<p>${renderInline(l)}</p>`).join('');
-    })
-    .join('');
+        if (/^[-*] /.test(block)) {
+          const items = block.split('\n').map((line) => {
+            const clean = line.replace(/^[-*] /, '').trim();
+            return clean ? `<li>${renderInline(clean)}</li>` : '';
+          }).filter(Boolean);
+          return `<ul>${items.join('')}</ul>`;
+        }
+
+        const lines = block.split('\n').filter(Boolean);
+        if (lines.length === 1) {
+          return `<p>${renderInline(lines[0])}</p>`;
+        }
+        return lines.map((l) => `<p>${renderInline(l)}</p>`).join('');
+      })
+      .join('')
+  }</div>`;
 }
 
 function renderInline(text) {
@@ -302,7 +310,6 @@ function renderInline(text) {
 }
 
 function showLoading(messages) {
-  elements.uploadSection.hidden = true;
   elements.loadingSection.hidden = false;
   elements.progressBar.hidden = false;
   let idx = 0;
@@ -317,12 +324,15 @@ function hideLoading() {
   clearInterval(loadingInterval);
   loadingInterval = null;
   elements.loadingSection.hidden = true;
-  elements.uploadSection.hidden = false;
   elements.progressBar.hidden = true;
 }
 
 function showError(msg) {
   hideLoading();
+  if (!elements.resultsPage.hidden) {
+    showToast(msg);
+    return;
+  }
   hideResults();
   elements.errorText.textContent = msg;
   elements.errorSection.hidden = false;
@@ -333,22 +343,18 @@ function hideError() {
 }
 
 function hideResults() {
-  elements.resultsSection.hidden = true;
-  elements.fixCard.hidden = true;
-  elements.fixBtn.hidden = true;
+  elements.resultsPage.hidden = true;
+  elements.uploadPage.hidden = false;
+  elements.toggleBtn.hidden = true;
   elements.supportSection.hidden = true;
-  elements.readMoreBtn.hidden = true;
-  elements.roastBody.classList.remove('expanded');
 }
 
-function copyToClipboard(text, btn) {
+function copyToClipboard(text) {
   navigator.clipboard.writeText(text).then(() => {
-    const original = btn.textContent;
-    btn.textContent = '✅ Copied!';
-    btn.classList.add('copied');
+    const original = elements.copyResultBtn.textContent;
+    elements.copyResultBtn.textContent = '✅ Copied!';
     setTimeout(() => {
-      btn.textContent = original;
-      btn.classList.remove('copied');
+      elements.copyResultBtn.textContent = original;
     }, 2000);
   }).catch(() => {
     showToast('Failed to copy. Try selecting the text manually.');
