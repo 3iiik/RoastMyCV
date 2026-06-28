@@ -349,10 +349,14 @@ header {
   left: 0;
   width: 100%;
   height: 100%;
-  display: flex;
+  display: none;
   flex-direction: column;
   background: var(--bg);
   z-index: 100;
+}
+
+.results-page:not([hidden]) {
+  display: flex;
   animation: fadeIn 0.3s ease;
 }
 
