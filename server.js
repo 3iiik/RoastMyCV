@@ -49,6 +49,8 @@ const ROAST_PROMPT = `You are a brutally honest, funny career coach. Roast this 
 
 const FIX_PROMPT = `You are an expert resume writer with 20 years of experience. Take this resume and completely rewrite it to be professional, ATS-friendly, impactful and impressive. Improve every bullet point using the STAR method, write a powerful summary, strengthen the skills section, fix formatting issues. Return the complete improved resume ready to copy and use. Use markdown formatting with clear sections.`;
 
+const SCORE_PROMPT = `Analyze this resume and give it a numerical score from 0 to 100 based on quality. Then list the 4 biggest mistakes/issues found in the resume. Respond ONLY with valid JSON in this exact format (no other text, no markdown): {"score": 72, "tips": ["Weak summary - generic and forgettable", "Bullet points lack metrics and impact", "Skills section is just buzzwords", "No quantifiable achievements"]}`;
+
 async function handleApiCall(req, res, prompt) {
   try {
     const { resumeText } = req.body;
@@ -73,6 +75,31 @@ async function handleApiCall(req, res, prompt) {
 
 app.post('/api/roast', (req, res) => handleApiCall(req, res, ROAST_PROMPT));
 app.post('/api/fix', (req, res) => handleApiCall(req, res, FIX_PROMPT));
+
+app.post('/api/score', async (req, res) => {
+  try {
+    const { resumeText } = req.body;
+
+    if (!resumeText || typeof resumeText !== 'string' || resumeText.trim().length < 20) {
+      return res.status(400).json({ error: 'Please provide a valid resume with at least 20 characters.' });
+    }
+
+    const text = await callGemini(SCORE_PROMPT, resumeText);
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('Could not parse score response');
+    const parsed = JSON.parse(jsonMatch[0]);
+    res.json({
+      score: Math.max(0, Math.min(100, Math.round(parsed.score))),
+      tips: Array.isArray(parsed.tips) ? parsed.tips.slice(0, 4) : []
+    });
+  } catch (err) {
+    console.error('Score API error:', err.message);
+    if (err.response?.status === 429) {
+      return res.status(429).json({ error: 'Gemini is a bit busy right now. Please wait 1-2 minutes and try again. ⏳' });
+    }
+    res.json({ score: null, tips: null });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`🔥 RoastMyCV server running on http://localhost:${PORT}`);

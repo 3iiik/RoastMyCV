@@ -38,9 +38,11 @@ const elements = {
   resultsLogo: document.getElementById('resultsLogo'),
   toggleBtn: document.getElementById('toggleBtn'),
   copyResultBtn: document.getElementById('copyResultBtn'),
-  supportSection: document.getElementById('supportSection'),
-  shareTwitter: document.getElementById('shareTwitter'),
-  shareWhatsapp: document.getElementById('shareWhatsapp'),
+  scoreCard: document.getElementById('scoreCard'),
+  scoreRingFill: document.getElementById('scoreRingFill'),
+  scoreValue: document.getElementById('scoreValue'),
+  tipsCard: document.getElementById('tipsCard'),
+  tipsList: document.getElementById('tipsList'),
   toast: document.getElementById('toast'),
   toastMessage: document.getElementById('toastMessage'),
   progressBar: document.getElementById('progressBar'),
@@ -50,6 +52,8 @@ let currentFile = null;
 let currentResumeText = null;
 let currentRoast = null;
 let currentFix = null;
+let currentScore = null;
+let currentTips = null;
 let isShowingFix = false;
 let loadingInterval = null;
 
@@ -96,20 +100,6 @@ elements.retryBtn.addEventListener('click', () => {
   if (currentFile) analyzeResume();
 });
 
-elements.shareTwitter.addEventListener('click', (e) => {
-  e.preventDefault();
-  const url = SHARE_URL;
-  const text = encodeURIComponent('I just got my resume roasted by AI 😂 Try RoastMyCV for free →');
-  window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`, '_blank');
-});
-
-elements.shareWhatsapp.addEventListener('click', (e) => {
-  e.preventDefault();
-  const url = SHARE_URL;
-  const text = encodeURIComponent('Check this out, it roasts your resume and fixes it for free 🔥');
-  window.open(`https://wa.me/?text=${text}%20${encodeURIComponent(url)}`, '_blank');
-});
-
 function handleFile(file) {
   if (file.type !== 'application/pdf') {
     showError('Please upload a valid PDF file.');
@@ -130,6 +120,8 @@ function resetUpload() {
   currentResumeText = null;
   currentRoast = null;
   currentFix = null;
+  currentScore = null;
+  currentTips = null;
   isShowingFix = false;
   elements.fileInput.value = '';
   elements.fileInfo.hidden = true;
@@ -158,19 +150,31 @@ async function analyzeResume() {
       return;
     }
 
-    const response = await fetch('/api/roast', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ resumeText: currentResumeText }),
-    });
+    const [roastRes, scoreRes] = await Promise.all([
+      fetch('/api/roast', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resumeText: currentResumeText }),
+      }),
+      fetch('/api/score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resumeText: currentResumeText }),
+      }),
+    ]);
 
-    const data = await response.json();
+    const roastData = await roastRes.json();
 
-    if (!response.ok) {
-      throw new Error(data.error || 'Server error. Please try again.');
+    if (!roastRes.ok) {
+      throw new Error(roastData.error || 'Server error. Please try again.');
     }
 
-    currentRoast = data.text;
+    currentRoast = roastData.text;
+
+    const scoreData = await scoreRes.json();
+    currentScore = scoreData.score;
+    currentTips = scoreData.tips;
+
     displayRoast();
   } catch (err) {
     showError(err.message || 'Something went wrong. Please check your connection and try again.');
@@ -229,15 +233,34 @@ function displayRoast() {
   elements.resultsPage.hidden = false;
   elements.toggleBtn.hidden = false;
   elements.toggleBtn.textContent = '✨ Fix My Resume';
-  elements.supportSection.hidden = true;
+
+  if (currentScore !== null) {
+    elements.scoreCard.hidden = false;
+    updateScoreRing(currentScore);
+  }
+  if (currentTips !== null && currentTips.length > 0) {
+    elements.tipsCard.hidden = false;
+    elements.tipsList.innerHTML = currentTips.map(t => `<li>${t}</li>`).join('');
+  }
+
   elements.resultsScroll.scrollTop = 0;
+}
+
+function updateScoreRing(score) {
+  const r = 54;
+  const circumference = 2 * Math.PI * r;
+  const offset = circumference * (1 - score / 100);
+  elements.scoreRingFill.style.strokeDasharray = `${circumference}`;
+  elements.scoreRingFill.style.strokeDashoffset = offset;
+  elements.scoreValue.textContent = score;
+  const color = score < 50 ? '#ff4500' : score < 75 ? '#ff8c00' : '#00c853';
+  elements.scoreRingFill.style.stroke = color;
 }
 
 function displayFix() {
   isShowingFix = true;
   elements.resultsBody.innerHTML = renderMarkdown(currentFix);
   elements.toggleBtn.textContent = '🔥 See Roast Again';
-  elements.supportSection.hidden = false;
   elements.resultsScroll.scrollTop = 0;
 }
 
@@ -346,7 +369,8 @@ function hideResults() {
   elements.resultsPage.hidden = true;
   elements.uploadPage.hidden = false;
   elements.toggleBtn.hidden = true;
-  elements.supportSection.hidden = true;
+  elements.scoreCard.hidden = true;
+  elements.tipsCard.hidden = true;
 }
 
 function copyToClipboard(text) {
