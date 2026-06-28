@@ -48,7 +48,6 @@ const elements = {
   progressBar: document.getElementById('progressBar'),
   contentTitle: document.getElementById('contentTitle'),
   contentSubtitle: document.getElementById('contentSubtitle'),
-  roastFeedback: document.getElementById('roastFeedback'),
 };
 
 let currentFile = null;
@@ -234,7 +233,6 @@ function displayRoast() {
   elements.resultsBody.innerHTML = renderMarkdown(currentRoast);
   elements.contentTitle.textContent = '🔥 The Roast';
   elements.contentSubtitle.textContent = 'The brutal truth about your resume.';
-  elements.roastFeedback.innerHTML = renderRoastCards(currentRoast);
   elements.uploadPage.hidden = true;
   elements.resultsPage.hidden = false;
   elements.toggleBtn.hidden = false;
@@ -261,19 +259,6 @@ function updateScoreRing(score) {
   elements.scoreValue.textContent = score;
   const color = score < 50 ? '#ff4500' : score < 75 ? '#ff8c00' : '#00c853';
   elements.scoreRingFill.style.stroke = color;
-}
-
-function renderRoastCards(text) {
-  const sections = text.split(/\n(?=#)/).filter(Boolean);
-  return sections.map(section => {
-    const lines = section.trim().split('\n').filter(Boolean);
-    const heading = lines[0].replace(/^#+ /, '');
-    const body = lines.slice(1).join(' ').slice(0, 120);
-    return `<div class="bg-error-container border-l-4 border-error p-4 rounded-r-lg brutalist-border">
-      <p class="text-sm font-bold mb-1 italic text-white">${heading}</p>
-      <p class="text-xs text-on-surface-variant">${renderInline(body)}${body.length >= 120 ? '...' : ''}</p>
-    </div>`;
-  }).join('');
 }
 
 function displayFix() {
