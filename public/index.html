@@ -1,123 +1,251 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RoastMyCV 🔥 - Get Your Resume Roasted & Fixed by AI</title>
-  <meta name="description" content="Upload your resume and get it brutally roasted and professionally rewritten by AI. Free, fun, and actually helpful.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>RoastMyCV | Upload &amp; Ignite</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&amp;family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+.material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+.brutal-shadow { box-shadow: 6px 6px 0px 0px #000000; }
+.brutal-shadow-orange { box-shadow: 6px 6px 0px 0px #ff6b00; }
+.drag-active { background-color: rgba(255, 107, 0, 0.05); border-color: #ffb693 !important; }
+.brutalist-border { border: 1px solid #27272A; }
+.hard-shadow { box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1); }
+.hard-shadow-orange { box-shadow: 4px 4px 0px 0px #ff6b00; }
+.cv-marker { text-decoration: underline wavy #ff6b00; text-underline-offset: 4px; }
+.strike-through-roast { position: relative; color: #e2bfb0; }
+.strike-through-roast::after { content: ''; position: absolute; left: 0; top: 50%; width: 100%; height: 2px; background: #ff6b00; transform: rotate(-1deg); }
+body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-family: Inter, sans-serif; }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #170b06; }
+::-webkit-scrollbar-thumb { background: #41312a; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #ff6b00; }
+
+/* Loading overlay */
+.loading-section { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; z-index: 500; }
+.loading-section:not([hidden]) { display: flex; }
+.loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+.loading-content { position: relative; text-align: center; padding: 48px; }
+.spinner { width: 48px; height: 48px; border: 3px solid #41312a; border-top-color: #ff6b00; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 24px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-message { font-size: 1.15rem; color: #f8ddd2; animation: pulse 1.5s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+
+/* Progress bar */
+.progress-bar { position: fixed; top: 0; left: 0; width: 100%; height: 3px; background: #0A0A0A; z-index: 9999; overflow: hidden; }
+.progress-bar::after { content: ''; position: absolute; top: 0; left: -40%; width: 40%; height: 100%; background: linear-gradient(90deg, #ff6b00, #00c853, #ff6b00); animation: progressSlide 1.2s ease-in-out infinite; }
+@keyframes progressSlide { 0% { left: -40%; } 100% { left: 110%; } }
+
+/* Toast */
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1d100a; border: 1px solid #5a4136; color: #f8ddd2; padding: 12px 24px; border-radius: 0.75rem; font-size: 0.9rem; font-weight: 500; z-index: 1000; animation: toastIn 0.3s ease; white-space: nowrap; }
+@keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+/* Fix for hidden attribute */
+[hidden] { display: none !important; }
+
+/* Score ring animation */
+.score-ring-fill { transition: stroke-dashoffset 0.8s ease, stroke 0.3s ease; }
+</style>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"tertiary-container": "#059eff", "tertiary-fixed-dim": "#9ccaff", "on-secondary-container": "#491d00", "on-tertiary-container": "#003357", "surface-container": "#2b1c16", "outline-variant": "#5a4136", "on-error-container": "#ffdad6", "tertiary-fixed": "#d0e4ff", "on-tertiary-fixed": "#001d35", "secondary-container": "#e3701e", "primary-container": "#ff6b00", "error-container": "#93000a", "surface-container-lowest": "#170b06", "on-primary": "#561f00", "inverse-primary": "#a04100", "primary-fixed-dim": "#ffb693", "inverse-surface": "#f8ddd2", "surface-container-highest": "#41312a", "on-tertiary": "#003257", "on-primary-container": "#572000", "on-surface": "#f8ddd2", "on-secondary-fixed": "#331200", "surface-container-high": "#362720", surface: "#1d100a", "on-secondary": "#532200", tertiary: "#9ccaff", background: "#1d100a", "on-secondary-fixed-variant": "#763300", outline: "#a98a7d", "secondary-fixed": "#ffdbc9", "on-background": "#f8ddd2", "inverse-on-surface": "#3d2d26", "on-tertiary-fixed-variant": "#00497b", "primary-fixed": "#ffdbcc", "on-surface-variant": "#e2bfb0", "on-primary-fixed-variant": "#7a3000", "surface-variant": "#41312a", "on-primary-fixed": "#351000", "on-error": "#690005", error: "#ffb4ab", primary: "#ffb693", "surface-tint": "#ffb693", "surface-container-low": "#261812", secondary: "#ffb68d", "secondary-fixed-dim": "#ffb68d", "surface-bright": "#46362e", "surface-dim": "#1d100a"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {unit: "8px", "margin-desktop": "40px", gutter: "24px", "container-max": "1280px", "margin-mobile": "16px"}, fontFamily: {"body-lg": ["Inter"], "label-md": ["Inter"], "display-xl": ["Montserrat"], "display-xl-mobile": ["Montserrat"], "headline-lg": ["Montserrat"], "body-md": ["Inter"], "headline-md": ["Montserrat"], headline: ["Montserrat"], display: ["Montserrat"], body: ["Inter"], label: ["Inter"]}, fontSize: {"body-lg": ["18px", {lineHeight: "28px", fontWeight: "400"}], "label-md": ["14px", {lineHeight: "20px", letterSpacing: "0.05em", fontWeight: "600"}], "display-xl": ["64px", {lineHeight: "72px", letterSpacing: "-0.04em", fontWeight: "900"}], "display-xl-mobile": ["40px", {lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "900"}], "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}], "headline-md": ["24px", {lineHeight: "32px", fontWeight: "700"}]}}}};</script>
 </head>
-<body>
+<body class="bg-[#0A0A0A] text-on-surface font-body-md antialiased">
 
-  <div class="progress-bar" id="progressBar" hidden></div>
+<div class="progress-bar" id="progressBar" hidden></div>
 
-  <!-- Loading (shown on both pages) -->
-  <div class="loading-section" id="loadingSection" hidden>
-    <div class="loading-overlay"></div>
-    <div class="loading-content">
-      <div class="spinner"></div>
-      <p class="loading-message" id="loadingMessage">Judging your life choices... 👀</p>
-    </div>
+<div class="loading-section" id="loadingSection" hidden>
+  <div class="loading-overlay"></div>
+  <div class="loading-content">
+    <div class="spinner"></div>
+    <p class="loading-message" id="loadingMessage">Judging your life choices... 👀</p>
   </div>
+</div>
 
-  <!-- Upload Page -->
-  <div class="upload-page" id="uploadPage">
-    <div class="container">
-      <header>
-        <h1 class="logo">
-          <span class="fire-emoji">🔥</span> RoastMyCV
-        </h1>
-        <p class="tagline">Upload your resume. Get it brutally roasted. Get it professionally fixed. All free.</p>
-      </header>
+<div class="toast" id="toast" hidden>
+  <span id="toastMessage">Copied to clipboard!</span>
+</div>
 
-      <main>
-        <div class="upload-section" id="uploadSection">
-          <div class="upload-zone" id="uploadZone">
-            <div class="upload-content">
-              <div class="upload-icon">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                  <polyline points="17 8 12 3 7 8"/>
-                  <line x1="12" y1="3" x2="12" y2="15"/>
-                </svg>
-              </div>
-              <p class="upload-text">Drop your PDF resume here or <span class="upload-link">browse files</span></p>
-              <p class="upload-hint">PDF format only · Max 10MB</p>
-            </div>
-            <input type="file" id="fileInput" accept=".pdf" hidden>
-          </div>
-          <div class="file-info" id="fileInfo" hidden>
-            <span class="file-name" id="fileName"></span>
-            <button class="btn-remove" id="removeFile" title="Remove file">✕</button>
-          </div>
-          <button class="btn-primary" id="analyzeBtn" disabled>🔥 Roast My Resume</button>
-        </div>
-
-        <div class="error-section" id="errorSection" hidden>
-          <div class="error-card">
-            <div class="error-icon">⚠️</div>
-            <p class="error-text" id="errorText">Something went wrong. Please try again.</p>
-            <button class="btn-secondary" id="retryBtn">Try Again</button>
-          </div>
-        </div>
-      </main>
-
-      <footer>
-        <p>Made with 🔥 and a lot of ☕ · <a href="https://ko-fi.com/roastmycv" target="_blank" rel="noopener">Support on Ko-fi</a></p>
-      </footer>
-    </div>
-  </div>
-
-  <!-- Results Page -->
-  <div class="results-page" id="resultsPage" hidden>
-    <div class="results-header" id="resultsHeader">
-      <div class="results-header-inner">
-        <div class="results-logo" id="resultsLogo">🔥 RoastMyCV</div>
-        <button class="btn-toggle" id="toggleBtn" hidden>✨ Fix My Resume</button>
-        <div class="results-header-right">
-          <button class="btn-copy-header" id="copyResultBtn">📋 Copy</button>
-        </div>
+<!-- ==================== UPLOAD PAGE ==================== -->
+<div id="uploadPage">
+  <nav class="fixed top-0 w-full z-50 bg-surface border-b border-outline-variant">
+    <div class="flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto">
+      <div class="font-display-xl text-primary font-black tracking-tighter">RoastMyCV</div>
+      <div class="flex gap-8 items-center">
+        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Examples</a>
+        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Pricing</a>
+        <button class="bg-primary-container text-on-primary-container px-6 py-2 rounded-lg font-label-md text-label-md font-bold active:scale-95 transition-transform">New Roast</button>
       </div>
     </div>
-    <div class="results-scroll" id="resultsScroll">
-      <div class="results-layout">
-        <aside class="panel panel--left">
-          <div class="panel-card" id="scoreCard" hidden>
-            <h3 class="panel-title">Your Resume Score</h3>
-            <div class="score-ring" id="scoreRing">
-              <svg width="140" height="140" viewBox="0 0 140 140">
-                <circle class="score-ring-bg" cx="70" cy="70" r="54" fill="none" stroke-width="10"/>
-                <circle class="score-ring-fill" id="scoreRingFill" cx="70" cy="70" r="54" fill="none" stroke-width="10" stroke-linecap="round" transform="rotate(-90 70 70)"/>
-              </svg>
-              <div class="score-value" id="scoreValue">0</div>
-            </div>
-          </div>
-        </aside>
-        <div class="results-center">
-          <div class="results-body" id="resultsBody"></div>
+  </nav>
+
+  <main class="flex-grow pt-32 pb-16 px-margin-mobile md:px-margin-desktop max-w-[900px] mx-auto w-full" id="uploadSection">
+    <header class="text-center mb-16">
+      <h1 class="font-display-xl text-display-xl-mobile md:text-display-xl text-on-surface mb-4">
+        Brutal AI Resume <span class="text-primary-container">Feedback.</span> Professional Results.
+      </h1>
+      <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+        Upload your CV and let our AI tear it apart. No sugar-coating, just the cold hard truth on why you're not getting hired.
+      </p>
+    </header>
+
+    <section class="space-y-8">
+      <div class="relative group cursor-pointer bg-[#121212] border-2 border-dashed border-[#27272A] hover:border-primary-container transition-all duration-300 rounded-xl p-12 text-center flex flex-col items-center justify-center min-h-[320px]" id="drop-zone">
+        <input accept=".pdf" class="hidden" id="file-upload" type="file"/>
+        <div class="bg-surface-container-high w-20 h-20 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+          <span class="material-symbols-outlined text-primary-container text-4xl">upload_file</span>
         </div>
-        <aside class="panel panel--right">
-          <div class="panel-card" id="tipsCard" hidden>
-            <h3 class="panel-title">Biggest Mistakes 🚨</h3>
-            <ul class="tips-list" id="tipsList"></ul>
-          </div>
-          <div class="panel-card panel-card--kofi">
-            <p class="panel-kofi-text">Did this help? Buy me a coffee ☕</p>
-            <a href="https://ko-fi.com/roastmycv" target="_blank" rel="noopener" class="btn-kofi btn-kofi--panel">☕ Support RoastMyCV</a>
-          </div>
-        </aside>
+        <h2 class="font-headline-md text-headline-md text-on-surface mb-2">Drop your resume here</h2>
+        <p class="font-body-md text-body-md text-on-surface-variant mb-4">Support PDF (Max 10MB)</p>
+        <div class="px-4 py-2 border border-outline-variant rounded-full text-on-surface-variant font-label-md text-label-md">or click to browse files</div>
+        <div id="fileInfo" hidden class="mt-4 flex items-center gap-3 px-4 py-2 bg-surface-container rounded-lg">
+          <span class="material-symbols-outlined text-primary text-sm">description</span>
+          <span class="text-sm font-medium" id="fileName"></span>
+          <button class="text-on-surface-variant hover:text-error transition-colors text-sm" id="removeFile">✕</button>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center gap-4">
+        <button class="w-full md:w-auto md:min-w-[300px] bg-primary-container text-on-primary-container px-12 py-6 rounded-xl font-bold text-xl uppercase tracking-widest brutal-shadow hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] active:translate-y-0 active:translate-x-0 active:shadow-none transition-all" id="roast-btn">
+          Roast My Resume
+        </button>
+        <p class="font-label-md text-label-md text-on-surface-variant italic opacity-60">Prepare for emotional damage.</p>
+      </div>
+    </section>
+
+    <div id="errorSection" hidden class="mt-8">
+      <div class="bg-error-container border border-error rounded-xl p-6 text-center">
+        <div class="text-2xl mb-2">⚠️</div>
+        <p class="text-on-error-container mb-4" id="errorText">Something went wrong. Please try again.</p>
+        <button class="bg-error text-on-error px-6 py-2 rounded-lg font-bold text-sm" id="retryBtn">Try Again</button>
       </div>
     </div>
-  </div>
 
-  <div class="toast" id="toast" hidden>
-    <span id="toastMessage">Copied to clipboard!</span>
-  </div>
+    <section class="mt-24 grid grid-cols-1 md:grid-cols-3 gap-gutter">
+      <div class="bg-[#121212] border border-[#27272A] p-8 rounded-xl space-y-4">
+        <span class="material-symbols-outlined text-primary">bolt</span>
+        <h3 class="font-headline-md text-headline-md text-on-surface">Instant Analysis</h3>
+        <p class="font-body-md text-body-md text-on-surface-variant">Get a comprehensive breakdown of your resume's weaknesses in under 30 seconds.</p>
+      </div>
+      <div class="bg-[#121212] border border-[#27272A] p-8 rounded-xl space-y-4">
+        <span class="material-symbols-outlined text-primary">psychology</span>
+        <h3 class="font-headline-md text-headline-md text-on-surface">ATS Optimization</h3>
+        <p class="font-body-md text-body-md text-on-surface-variant">See exactly where automated tracking systems fail to parse your data.</p>
+      </div>
+      <div class="bg-[#121212] border border-[#27272A] p-8 rounded-xl space-y-4">
+        <span class="material-symbols-outlined text-primary">contract_edit</span>
+        <h3 class="font-headline-md text-headline-md text-on-surface">The Fix</h3>
+        <p class="font-body-md text-body-md text-on-surface-variant">Actionable suggestions to turn your "Roasted" sections into professional powerhouses.</p>
+      </div>
+    </section>
+  </main>
 
-  <script src="script.js"></script>
+  <footer class="w-full py-12 mt-16 bg-surface border-t border-outline-variant">
+    <div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop gap-gutter max-w-container-max mx-auto">
+      <div class="space-y-2 text-center md:text-left">
+        <div class="font-headline-md text-primary font-bold">RoastMyCV</div>
+        <p class="font-body-md text-body-md text-on-surface-variant">© 2024 RoastMyCV. Brutal Honesty Guaranteed.</p>
+      </div>
+      <div class="flex gap-8">
+        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary underline transition-all opacity-80 hover:opacity-100" href="#">Twitter</a>
+        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary underline transition-all opacity-80 hover:opacity-100" href="#">LinkedIn</a>
+        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary underline transition-all opacity-80 hover:opacity-100" href="https://ko-fi.com/roastmycv" target="_blank">Donate on Ko-fi</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ==================== RESULTS PAGE ==================== -->
+<div id="results" hidden>
+  <header class="fixed top-0 w-full z-50 bg-surface border-b border-outline-variant">
+    <div class="flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto">
+      <div class="font-display-xl text-primary font-black tracking-tighter cursor-pointer" id="resultsLogo">RoastMyCV</div>
+      <div class="flex items-center gap-4">
+        <button class="bg-primary-container text-on-primary px-6 py-2 rounded-lg font-bold text-sm hover:opacity-90 transition-opacity" id="fixBtn" hidden>✨ Fix My Resume</button>
+        <button class="border border-outline-variant text-on-surface-variant px-4 py-2 rounded-lg font-bold text-sm hover:bg-surface-container transition-colors" id="copyResultBtn">📋 Copy</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-24 pb-16 px-margin-desktop max-w-container-max mx-auto min-h-screen" id="resultsScroll">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+      <!-- Left Column: Score -->
+      <aside class="lg:col-span-3 sticky top-28 space-y-gutter" id="scoreCard" hidden>
+        <div class="bg-[#121212] brutalist-border p-8 rounded-xl flex flex-col items-center text-center">
+          <h3 class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant mb-6">Roast Score</h3>
+          <div class="relative w-40 h-40 flex items-center justify-center">
+            <svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 160 160">
+              <circle class="text-surface-container-highest" cx="80" cy="80" fill="transparent" r="68" stroke="currentColor" stroke-width="10"/>
+              <circle class="score-ring-fill" id="scoreRingFill" cx="80" cy="80" fill="transparent" r="68" stroke="#ff6b00" stroke-dasharray="427" stroke-dashoffset="427" stroke-linecap="round" stroke-width="10"/>
+            </svg>
+            <div class="flex flex-col items-center">
+              <span class="text-5xl font-black text-primary font-display-xl" id="scoreValue">0</span>
+              <span class="text-sm font-bold opacity-50">/ 100</span>
+            </div>
+          </div>
+        </div>
+        <div class="bg-[#121212] brutalist-border p-6 rounded-xl" id="tipsCard" hidden>
+          <div class="flex items-center gap-2 mb-4">
+            <span class="material-symbols-outlined text-primary">local_fire_department</span>
+            <h4 class="font-label-md text-label-md uppercase">Biggest Mistakes 🚨</h4>
+          </div>
+          <ul class="text-sm text-on-surface-variant leading-relaxed space-y-3 list-disc list-inside marker:text-primary" id="tipsList"></ul>
+        </div>
+      </aside>
+
+      <!-- Center Column: Content -->
+      <section class="lg:col-span-6 space-y-6" id="roastContent">
+        <div class="flex justify-between items-end mb-4 px-2">
+          <div>
+            <h1 class="font-headline-lg text-headline-lg" id="contentTitle">🔥 The Roast</h1>
+            <p class="text-on-surface-variant" id="contentSubtitle">The brutal truth about your resume.</p>
+          </div>
+        </div>
+        <div class="bg-[#121212] brutalist-border rounded-xl p-8 md:p-12 min-h-[400px] shadow-2xl relative overflow-hidden" id="resultsBody">
+          <div class="space-y-6 max-w-2xl mx-auto rmd text-on-surface-variant leading-relaxed">
+            <p class="opacity-50">Waiting for results...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Roast & Donate -->
+      <aside class="lg:col-span-3 space-y-gutter" id="fixContent">
+        <div class="flex items-center gap-2 mb-2">
+          <h2 class="font-headline-md text-headline-md text-primary">🔍 The Roast</h2>
+        </div>
+        <div class="space-y-4" id="roastFeedback">
+          <div class="bg-error-container border-l-4 border-error p-4 rounded-r-lg brutalist-border">
+            <p class="text-sm font-bold mb-1 italic text-white">Loading feedback...</p>
+          </div>
+        </div>
+        <div class="pt-4">
+          <a href="https://ko-fi.com/roastmycv" target="_blank" rel="noopener" class="w-full flex items-center justify-center gap-3 bg-error text-on-error py-4 px-6 rounded-xl font-black text-lg hard-shadow hover:translate-y-[-4px] hover:translate-x-[-4px] hover:shadow-[8px_8px_0px_0px_#ffb4ab] transition-all border-4 border-on-error no-underline">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_cafe</span>
+            DONATE OR DIE
+          </a>
+          <p class="text-center text-[10px] mt-3 uppercase font-bold tracking-widest opacity-50">Support the Brutality</p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="w-full py-12 mt-16 bg-surface border-t border-outline-variant">
+    <div class="flex flex-col md:flex-row justify-between items-center px-margin-desktop gap-gutter max-w-container-max mx-auto">
+      <div class="flex flex-col items-center md:items-start gap-2">
+        <div class="font-headline-md text-primary font-bold">RoastMyCV</div>
+        <p class="font-body-md text-body-md text-on-surface-variant opacity-80">© 2024 RoastMyCV. Brutal Honesty Guaranteed.</p>
+      </div>
+      <div class="flex gap-8">
+        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary underline transition-all opacity-80 hover:opacity-100" href="#">Twitter</a>
+        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary underline transition-all opacity-80 hover:opacity-100" href="#">LinkedIn</a>
+        <a class="font-label-md text-label-md text-on-surface-variant hover:text-primary underline transition-all opacity-80 hover:opacity-100" href="https://ko-fi.com/roastmycv" target="_blank">Donate on Ko-fi</a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
