@@ -46,10 +46,6 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
   .rmd { font-size: 14px; line-height: 1.7; }
   .keyword-grid { grid-template-columns: 1fr; }
 }
-@media (max-width: 480px) {
-  .results-header { flex-wrap: wrap; gap: 8px; }
-  .results-header-center { order: 3; width: 100%; justify-content: center; }
-}
 @media (min-width: 1920px) {
   .results-grid-left { flex: 0 0 280px; max-width: 280px; }
   #resultsBody { padding: 40px 56px; }
@@ -112,6 +108,64 @@ button:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 @keyframes dropFadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 .share-dropdown-item { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 12px; font-size: 12px; color: #ccc; text-decoration: none; border: none; background: none; cursor: pointer; border-radius: 6px; font-family: inherit; transition: all 0.15s; text-align: left; white-space: nowrap; }
 .share-dropdown-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+/* --- Mobile UI (< 768px) --- */
+@media (max-width: 767px) {
+  .results-grid { gap: 12px; }
+  .results-grid-left, .results-grid-center { max-width: none; flex: none; width: 100%; }
+  .results-grid-left { position: static !important; }
+  .results-grid-center { width: 100%; }
+  #tipsCard { margin-top: 0; }
+  #roastContent > div { margin-bottom: 0; }
+  .results-grid-left > div + div { margin-top: 12px; }
+  .results-grid-center > div + div { margin-top: 12px; }
+  #resultsBody { min-height: 200px; }
+}
+
+/* Mobile < 640px — tighter spacing, smaller type */
+@media (max-width: 640px) {
+  #resultsBody { padding: 16px; }
+  .rmd { font-size: 14px; line-height: 1.7; }
+  .rmd h2 { font-size: 1rem; margin: 18px 0 8px; }
+  .rmd h3 { font-size: 0.9rem; margin: 14px 0 6px; }
+  .keyword-grid { grid-template-columns: 1fr; }
+  .results-grid-left > div, .results-grid-center section > div { padding: 16px !important; }
+  #scoreCard h3, #tipsCard h4, #strengthsSection h3, #keywordSection h3, #categoryScoresSection h3, #verdictSection h3 { font-size: 0.75rem; }
+  #contentTitle { font-size: 1.1rem; }
+  #contentSubtitle { font-size: 0.8rem; }
+  #verdictBadge { font-size: 1rem; }
+  .category-score-item { gap: 4px; }
+}
+
+/* Mobile < 480px — nav bar reduction, full-width toggle */
+@media (max-width: 480px) {
+  .results-header { flex-wrap: wrap; gap: 6px; padding-top: 8px !important; padding-bottom: 8px !important; }
+  .results-header-center { order: 3; width: 100%; justify-content: center; }
+  #resultsLogo { font-size: 1.1rem !important; }
+  .toggle-group { width: 100%; border-radius: 6px; }
+  .toggle-btn { flex: 1; justify-content: center; padding: 8px 6px; font-size: 11px; height: 40px; min-height: 44px; }
+  .ig-btn-gradient { width: 28px !important; height: 28px !important; padding: 0 !important; }
+  .ig-btn-gradient svg { width: 15px; height: 15px; }
+  #shareBtn { padding: 8px 10px; font-size: 0.7rem; min-height: 28px; }
+  .share-dropdown { left: 50%; right: auto; transform: translateX(-50%); min-width: 180px; }
+  .share-dropdown-item { white-space: normal; word-break: break-word; padding: 10px 12px; min-height: 44px; }
+  .ig-popup { width: calc(100% - 32px); max-width: 340px; left: 50%; right: auto; transform: translateX(-50%); bottom: max(16px, env(safe-area-inset-bottom, 16px)); }
+  .ig-popup-content { padding: 16px; }
+  #keywordMatchList { gap: 6px; }
+  #keywordMatchList > div { padding: 6px 10px; font-size: 0.7rem; }
+  .category-score-item { flex-direction: column; align-items: stretch; gap: 2px; }
+  .category-score-header { margin-bottom: 2px; }
+  #categoryScoresList > div { padding: 0; }
+  #verdictSection .rmd p { word-break: break-word; overflow-wrap: break-word; }
+  #resultsBody .rmd { overflow-x: hidden; word-break: break-word; }
+}
+
+/* Touch targets: minimum 44px height for all interactive elements */
+@media (max-width: 640px) {
+  #roast-btn, #retryBtn, .ig-popup-btn, .share-dropdown-item, .toggle-btn { min-height: 44px; }
+  #roast-btn { padding-top: 14px; padding-bottom: 14px; font-size: 0.9rem; }
+  .ig-popup-btn { padding: 14px 16px; }
+}
 </style>
 <script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"tertiary-container": "#059eff", "tertiary-fixed-dim": "#9ccaff", "on-secondary-container": "#491d00", "on-tertiary-container": "#003357", "surface-container": "#2b1c16", "outline-variant": "#5a4136", "on-error-container": "#ffdad6", "tertiary-fixed": "#d0e4ff", "on-tertiary-fixed": "#001d35", "secondary-container": "#e3701e", "primary-container": "#ff6b00", "error-container": "#93000a", "surface-container-lowest": "#170b06", "on-primary": "#561f00", "inverse-primary": "#a04100", "primary-fixed-dim": "#ffb693", "inverse-surface": "#f8ddd2", "surface-container-highest": "#41312a", "on-tertiary": "#003257", "on-primary-container": "#572000", "on-surface": "#f8ddd2", "on-secondary-fixed": "#331200", "surface-container-high": "#362720", surface: "#1d100a", "on-secondary": "#532200", tertiary: "#9ccaff", background: "#1d100a", "on-secondary-fixed-variant": "#763300", outline: "#a98a7d", "secondary-fixed": "#ffdbc9", "on-background": "#f8ddd2", "inverse-on-surface": "#3d2d26", "on-tertiary-fixed-variant": "#00497b", "primary-fixed": "#ffdbcc", "on-surface-variant": "#e2bfb0", "on-primary-fixed-variant": "#7a3000", "surface-variant": "#41312a", "on-primary-fixed": "#351000", "on-error": "#690005", error: "#ffb4ab", primary: "#ffb693", "surface-tint": "#ffb693", "surface-container-low": "#261812", secondary: "#ffb68d", "secondary-fixed-dim": "#ffb68d", "surface-bright": "#46362e", "surface-dim": "#1d100a"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {unit: "6px", "margin-desktop": "32px", gutter: "20px", "container-max": "1280px", "margin-mobile": "12px"}, fontFamily: {"body-lg": ["Inter"], "label-md": ["Inter"], "display-xl": ["Montserrat"], "display-xl-mobile": ["Montserrat"], "headline-lg": ["Montserrat"], "body-md": ["Inter"], "headline-md": ["Montserrat"], headline: ["Montserrat"], display: ["Montserrat"], body: ["Inter"], label: ["Inter"]}, fontSize: {"body-lg": ["15px", {lineHeight: "24px", fontWeight: "400"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600"}], "display-xl": ["54px", {lineHeight: "62px", letterSpacing: "-0.04em", fontWeight: "900"}], "display-xl-mobile": ["34px", {lineHeight: "42px", letterSpacing: "-0.02em", fontWeight: "900"}], "headline-lg": ["27px", {lineHeight: "34px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "headline-md": ["20px", {lineHeight: "28px", fontWeight: "700"}]}}}};</script>
 </head>

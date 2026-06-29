@@ -316,10 +316,10 @@ function renderCategoryScores(categories) {
     const score = cat.score || cat;
     const note = cat.note || '';
     const color = score < 50 ? '#ff4500' : score < 75 ? '#ff8c00' : '#00c853';
-    return `<div>
-      <div class="flex justify-between items-center mb-1">
-        <span class="text-xs font-medium text-on-surface">${names[key] || key}</span>
-        <span class="text-xs font-bold text-on-surface" style="color:${color}">${score}</span>
+    return `<div class="category-score-item">
+      <div class="category-score-header flex justify-between items-center mb-1">
+        <span class="category-score-name text-xs font-medium text-on-surface">${names[key] || key}</span>
+        <span class="category-score-value text-xs font-bold text-on-surface" style="color:${color}">${score}</span>
       </div>
       <div class="h-1.5 bg-[#0A0A0A] rounded-full overflow-hidden">
         <div class="h-full rounded-full transition-all duration-500" style="width:${score}%;background:${color}"></div>
@@ -530,9 +530,19 @@ function showToast(msg) {
 }
 
 let kofiPopupTimer = null;
+let kofiScrolled = false;
 function startKofiPopupTimer() {
   clearTimeout(kofiPopupTimer);
-  kofiPopupTimer = setTimeout(() => { if (!el.resultsPage.hidden) el.kofiPopup.hidden = false; }, 30000);
+  kofiScrolled = false;
+  const isMobile = window.innerWidth < 768;
+  const delay = isMobile ? 8000 : 30000;
+  kofiPopupTimer = setTimeout(() => {
+    if (!el.resultsPage.hidden && (kofiScrolled || !isMobile)) el.kofiPopup.hidden = false;
+  }, delay);
+  if (isMobile) {
+    const onScroll = () => { kofiScrolled = true; window.removeEventListener('scroll', onScroll); };
+    window.addEventListener('scroll', onScroll, { once: true });
+  }
 }
 function hideKofiPopup() { clearTimeout(kofiPopupTimer); el.kofiPopup.hidden = true; }
 el.kofiPopupClose.addEventListener('click', hideKofiPopup);
