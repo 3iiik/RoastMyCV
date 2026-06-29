@@ -7,13 +7,20 @@
     "start": "node server.js",
     "dev": "node server.js"
   },
-  "keywords": ["resume", "roast", "ai", "gemini", "cv"],
+  "keywords": [
+    "resume",
+    "roast",
+    "ai",
+    "gemini",
+    "cv"
+  ],
   "license": "MIT",
   "dependencies": {
     "axios": "^1.7.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "express-rate-limit": "^7.3.1"
+    "express-rate-limit": "^7.3.1",
+    "mammoth": "^1.6.0"
   }
 }

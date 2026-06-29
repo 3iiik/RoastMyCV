@@ -11,14 +11,8 @@
 <style>
 .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
 .brutal-shadow { box-shadow: 6px 6px 0px 0px #000000; }
-.brutal-shadow-orange { box-shadow: 6px 6px 0px 0px #ff6b00; }
 .drag-active { background-color: rgba(255, 107, 0, 0.05); border-color: #ffb693 !important; }
 .brutalist-border { border: 1px solid #27272A; }
-.hard-shadow { box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1); }
-.hard-shadow-orange { box-shadow: 4px 4px 0px 0px #ff6b00; }
-.cv-marker { text-decoration: underline wavy #ff6b00; text-underline-offset: 4px; }
-.strike-through-roast { position: relative; color: #e2bfb0; }
-.strike-through-roast::after { content: ''; position: absolute; left: 0; top: 50%; width: 100%; height: 2px; background: #ff6b00; transform: rotate(-1deg); }
 body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-family: Inter, sans-serif; }
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: #170b06; }
@@ -39,7 +33,27 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
 .results-grid { display: flex; gap: 20px; align-items: start; }
 .results-grid-left { max-width: 250px; flex: 0 0 250px; }
 .results-grid-center { flex: 1; min-width: 0; }
-@media (max-width: 900px) { .results-grid { flex-direction: column; } .results-grid-left { max-width: none; flex: none; } }
+.keyword-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+@media (max-width: 900px) {
+  .results-grid { flex-direction: column; }
+  .results-grid-left { max-width: none; flex: none; }
+  .results-grid-center { width: 100%; }
+}
+@media (max-width: 640px) {
+  .toggle-group { font-size: 11px; }
+  .toggle-btn { padding: 6px 10px; font-size: 11px; height: 32px; }
+  #resultsBody { padding: 20px 16px; }
+  .rmd { font-size: 14px; line-height: 1.7; }
+  .keyword-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .results-header { flex-wrap: wrap; gap: 8px; }
+  .results-header-center { order: 3; width: 100%; justify-content: center; }
+}
+@media (min-width: 1920px) {
+  .results-grid-left { flex: 0 0 280px; max-width: 280px; }
+  #resultsBody { padding: 40px 56px; }
+}
 
 /* RMD markdown styles */
 #resultsBody { padding: 32px 40px; }
@@ -84,6 +98,9 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
 .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1d100a; border: 1px solid #5a4136; color: #f8ddd2; padding: 10px 20px; border-radius: 0.75rem; font-size: 0.8rem; font-weight: 500; z-index: 1000; animation: toastIn 0.3s ease; white-space: nowrap; }
 @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 
+/* Disabled button state */
+button:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
 /* Fix for hidden attribute */
 [hidden] { display: none !important; }
 
@@ -106,7 +123,7 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
   <div class="loading-overlay"></div>
   <div class="loading-content">
     <div class="spinner"></div>
-    <p class="loading-message" id="loadingMessage">Judging your life choices... 👀</p>
+    <div class="loading-message" id="loadingMessage">Judging your life choices... 👀</div>
   </div>
 </div>
 
@@ -120,7 +137,7 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
     <div class="flex justify-between items-center px-margin-desktop py-3 max-w-container-max mx-auto">
       <div class="font-display-xl text-primary font-black tracking-tighter" style="font-size: 1.4rem;">RoastMyCV</div>
       <div class="flex gap-8 items-center">
-        <a href="https://instagram.com/3iik.dev" target="_blank" rel="noopener" class="ig-btn-gradient p-2 rounded-lg inline-flex items-center justify-center transition-all" style="width: 36px; height: 36px;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+        <a href="https://instagram.com/3iik.dev" target="_blank" rel="noopener" class="ig-btn-gradient p-2 rounded-lg inline-flex items-center justify-center transition-all" style="width: 36px; height: 36px;" aria-label="Follow on Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
       </div>
     </div>
   </nav>
@@ -135,26 +152,44 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
       </p>
     </header>
 
-    <section class="space-y-8">
-      <div class="relative group cursor-pointer bg-[#121212] border-2 border-dashed border-[#27272A] hover:border-primary-container transition-all duration-300 rounded-xl p-8 text-center flex flex-col items-center justify-center min-h-[260px]" id="drop-zone">
-        <input accept=".pdf" class="hidden" id="file-upload" type="file"/>
+    <section class="space-y-6">
+      <!-- Target Role / Job Description -->
+      <div class="bg-[#121212] border border-[#27272A] rounded-xl p-5">
+        <label class="font-label-md text-label-md text-on-surface-variant mb-2 block">Target Role <span class="text-on-surface-variant opacity-50">(optional)</span></label>
+        <input type="text" id="targetRole" placeholder="e.g. Frontend Developer, Backend Engineer, Product Manager" class="w-full bg-[#0A0A0A] border border-[#333] rounded-lg px-4 py-2.5 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:border-primary-container focus:outline-none transition-colors mb-4"/>
+        <label class="font-label-md text-label-md text-on-surface-variant mb-2 block">Or paste Job Description</label>
+        <textarea id="jobDescription" rows="3" placeholder="Paste the full job description here..." class="w-full bg-[#0A0A0A] border border-[#333] rounded-lg px-4 py-2.5 text-sm text-on-surface placeholder:text-on-surface-variant/40 focus:border-primary-container focus:outline-none transition-colors resize-none"></textarea>
+      </div>
+
+      <!-- Roast Level -->
+      <div class="flex items-center justify-center gap-3">
+        <span class="text-xs text-on-surface-variant font-medium">Roast Level:</span>
+        <div class="flex rounded-lg overflow-hidden border border-[#333]">
+          <button type="button" class="roast-level-btn px-4 py-1.5 text-xs font-bold transition-all bg-transparent text-on-surface-variant hover:text-on-surface" data-level="friendly" aria-pressed="false">Friendly</button>
+          <button type="button" class="roast-level-btn px-4 py-1.5 text-xs font-bold transition-all bg-primary-container text-on-primary-container" data-level="brutal" aria-pressed="true">Brutal</button>
+          <button type="button" class="roast-level-btn px-4 py-1.5 text-xs font-bold transition-all bg-transparent text-on-surface-variant hover:text-on-surface" data-level="nuclear" aria-pressed="false">Nuclear</button>
+        </div>
+      </div>
+
+      <div class="relative group cursor-pointer bg-[#121212] border-2 border-dashed border-[#27272A] hover:border-primary-container transition-all duration-300 rounded-xl p-8 text-center flex flex-col items-center justify-center min-h-[260px]" id="drop-zone" role="button" tabindex="0" aria-label="Upload resume file">
+        <input accept=".pdf,.docx" class="hidden" id="file-upload" type="file" aria-hidden="true"/>
         <div class="bg-surface-container-high w-16 h-16 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
           <span class="material-symbols-outlined text-primary-container text-3xl">upload_file</span>
         </div>
         <h2 class="font-headline-md text-headline-md text-on-surface mb-1">Drop your resume here</h2>
-        <p class="font-body-md text-body-md text-on-surface-variant mb-3">Support PDF (Max 10MB)</p>
+        <p class="font-body-md text-body-md text-on-surface-variant mb-3">Supports PDF &amp; DOCX (Max 10MB)</p>
         <div class="px-4 py-2 border border-outline-variant rounded-full text-on-surface-variant font-label-md text-label-md">or click to browse files</div>
         <div id="fileInfo" hidden class="mt-4 flex items-center gap-3 px-4 py-2 bg-surface-container rounded-lg">
           <span class="material-symbols-outlined text-primary text-sm">description</span>
           <span class="text-sm font-medium" id="fileName"></span>
-          <button class="text-on-surface-variant hover:text-error transition-colors text-sm" id="removeFile">✕</button>
+          <button type="button" class="text-on-surface-variant hover:text-error transition-colors text-sm" id="removeFile" aria-label="Remove file">✕</button>
         </div>
       </div>
 
       <p class="text-center text-xs text-on-surface-variant opacity-60 max-w-md mx-auto leading-relaxed">Your PDF is never stored or shared. Processed in real time and immediately discarded.</p>
 
       <div class="flex flex-col items-center gap-4">
-        <button class="w-full md:w-auto md:min-w-[260px] bg-primary-container text-on-primary-container px-10 py-5 rounded-xl font-bold text-lg uppercase tracking-widest brutal-shadow hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:translate-y-0 active:translate-x-0 active:shadow-none transition-all" id="roast-btn">
+        <button type="button" class="w-full md:w-auto md:min-w-[260px] bg-primary-container text-on-primary-container px-10 py-5 rounded-xl font-bold text-lg uppercase tracking-widest brutal-shadow hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:translate-y-0 active:translate-x-0 active:shadow-none transition-all" id="roast-btn">
           Roast My Resume
         </button>
         <p class="font-label-md text-label-md text-on-surface-variant italic opacity-60">Prepare for emotional damage.</p>
@@ -165,25 +200,37 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
       <div class="bg-error-container border border-error rounded-xl p-6 text-center">
         <div class="text-2xl mb-2">⚠️</div>
         <p class="text-on-error-container mb-4" id="errorText">Something went wrong. Please try again.</p>
-        <button class="bg-error text-on-error px-6 py-2 rounded-lg font-bold text-sm" id="retryBtn">Try Again</button>
+        <button type="button" class="bg-error text-on-error px-6 py-2 rounded-lg font-bold text-sm" id="retryBtn">Try Again</button>
       </div>
     </div>
 
-    <section class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-gutter">
-      <div class="bg-[#121212] border border-[#27272A] p-6 rounded-xl space-y-3">
-        <span class="material-symbols-outlined text-primary">bolt</span>
-        <h3 class="font-headline-md text-headline-md text-on-surface">Instant Analysis</h3>
-        <p class="font-body-md text-body-md text-on-surface-variant">Get a comprehensive breakdown of your resume's weaknesses in under 30 seconds.</p>
-      </div>
-      <div class="bg-[#121212] border border-[#27272A] p-6 rounded-xl space-y-3">
-        <span class="material-symbols-outlined text-primary">psychology</span>
-        <h3 class="font-headline-md text-headline-md text-on-surface">ATS Optimization</h3>
-        <p class="font-body-md text-body-md text-on-surface-variant">See exactly where automated tracking systems fail to parse your data.</p>
-      </div>
-      <div class="bg-[#121212] border border-[#27272A] p-6 rounded-xl space-y-3">
-        <span class="material-symbols-outlined text-primary">contract_edit</span>
-        <h3 class="font-headline-md text-headline-md text-on-surface">The Fix</h3>
-        <p class="font-body-md text-body-md text-on-surface-variant">Actionable suggestions to turn your "Roasted" sections into professional powerhouses.</p>
+    <section class="mt-20">
+      <h2 class="font-headline-lg text-headline-lg text-on-surface text-center mb-2">See the Transformation</h2>
+      <p class="text-sm text-on-surface-variant text-center mb-8 max-w-lg mx-auto">Real before/after from our AI. Your resume can look like this too.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+        <div class="bg-[#121212] border border-[#27272A] rounded-xl p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-xs font-bold uppercase tracking-widest text-error">Before</span>
+          </div>
+          <div class="bg-[#0A0A0A] rounded-lg p-4 space-y-3 text-sm text-on-surface-variant">
+            <p>• Worked on website</p>
+            <p>• Helped with various tasks</p>
+            <p>• Responsible for frontend</p>
+            <p class="mt-3 pt-3 border-t border-[#27272A]"><span class="text-on-surface font-bold">Weak Summary:</span> "Hardworking team player looking for an opportunity to grow."</p>
+          </div>
+        </div>
+        <div class="bg-[#121212] border border-primary-container/30 rounded-xl p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-xs font-bold uppercase tracking-widest text-primary-container">After</span>
+            <span class="text-[10px] text-primary-container/60">✨ AI Rewritten</span>
+          </div>
+          <div class="bg-[#0A0A0A] rounded-lg p-4 space-y-3 text-sm text-on-surface-variant">
+            <p>• Built and maintained a React web application serving 10,000+ users while improving performance by 35%</p>
+            <p>• Led cross-functional initiatives reducing deployment time by 40% across 3 teams</p>
+            <p>• Architected a component library adopted by 15 developers, cutting development time by 60%</p>
+            <p class="mt-3 pt-3 border-t border-[#27272A]"><span class="text-on-surface font-bold">Professional Summary:</span> "Full-stack engineer with 4+ years shipping production applications at scale. Proven track record of improving performance, reducing costs, and leading technical initiatives."</p>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -193,28 +240,28 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
 <!-- ==================== RESULTS PAGE ==================== -->
 <div id="results" hidden>
   <header class="fixed top-0 w-full z-50 bg-surface border-b border-outline-variant">
-    <div class="flex justify-between items-center px-margin-desktop py-3 max-w-container-max mx-auto">
-      <div class="font-display-xl text-primary font-black tracking-tighter cursor-pointer" id="resultsLogo" style="font-size: 1.4rem;">RoastMyCV</div>
-      <div class="toggle-group">
-        <button class="toggle-btn toggle-btn-active" id="roastToggleBtn">The Roast</button>
-        <button class="toggle-btn toggle-btn-inactive" id="fixToggleBtn">Fix My Resume</button>
+    <div class="results-header flex justify-between items-center px-margin-mobile md:px-margin-desktop py-3 max-w-container-max mx-auto">
+      <div class="font-display-xl text-primary font-black tracking-tighter cursor-pointer shrink-0" id="resultsLogo" style="font-size: 1.4rem;">RoastMyCV</div>
+      <div class="results-header-center toggle-group">
+        <button type="button" class="toggle-btn toggle-btn-active" id="roastToggleBtn" aria-pressed="true">The Roast</button>
+        <button type="button" class="toggle-btn toggle-btn-inactive" id="fixToggleBtn" aria-pressed="false">Fix My Resume</button>
       </div>
-      <div class="flex items-center gap-3">
-        <a href="https://instagram.com/3iik.dev" target="_blank" rel="noopener" class="ig-btn-gradient p-1.5 rounded-lg inline-flex items-center justify-center transition-all no-underline" style="width: 32px; height: 32px;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+      <div class="flex items-center gap-2 md:gap-3 shrink-0">
+        <a href="https://instagram.com/3iik.dev" target="_blank" rel="noopener" class="ig-btn-gradient p-1.5 rounded-lg inline-flex items-center justify-center transition-all no-underline" style="width: 32px; height: 32px;" aria-label="Follow on Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
         <div class="relative" id="shareContainer">
-          <button class="bg-[#121212] text-white border border-[#333] px-4 py-1.5 rounded-lg font-bold text-xs hover:bg-[#1a1a1a] transition-all whitespace-nowrap" id="shareBtn">🔗 Share</button>
-          <div class="share-dropdown" id="shareDropdown" hidden>
-            <a href="https://twitter.com/intent/tweet?text=I%20just%20got%20my%20resume%20brutally%20roasted%20by%20AI%20%F0%9F%98%82%20Try%20RoastMyCV%20for%20free%20%E2%86%92%20https%3A%2F%2Froastmycv-production.up.railway.app" target="_blank" rel="noopener" class="share-dropdown-item">🐦 Share on X (Twitter)</a>
-            <a href="https://wa.me/?text=Check%20this%20out%2C%20it%20roasts%20your%20resume%20and%20fixes%20it%20for%20free%20%F0%9F%94%A5%20%E2%86%92%20https%3A%2F%2Froastmycv-production.up.railway.app" target="_blank" rel="noopener" class="share-dropdown-item">💬 Share on WhatsApp</a>
-            <a href="https://instagram.com/3iik.dev" target="_blank" rel="noopener" class="share-dropdown-item">📸 Follow the creator on Instagram</a>
-            <button class="share-dropdown-item" id="shareCopyLink">📋 Copy Link</button>
+          <button type="button" class="bg-[#121212] text-white border border-[#333] px-4 py-1.5 rounded-lg font-bold text-xs hover:bg-[#1a1a1a] transition-all whitespace-nowrap" id="shareBtn" aria-label="Share" aria-haspopup="true" aria-expanded="false">🔗 Share</button>
+          <div class="share-dropdown" id="shareDropdown" hidden role="menu">
+            <a href="https://twitter.com/intent/tweet?text=I%20just%20got%20my%20resume%20brutally%20roasted%20by%20AI%20%F0%9F%98%82%20Try%20RoastMyCV%20for%20free%20%E2%86%92%20https%3A%2F%2Froastmycv-production.up.railway.app" target="_blank" rel="noopener" class="share-dropdown-item" role="menuitem">Share on X (Twitter)</a>
+            <a href="https://wa.me/?text=Check%20this%20out%2C%20it%20roasts%20your%20resume%20and%20fixes%20it%20for%20free%20%F0%9F%94%A5%20%E2%86%92%20https%3A%2F%2Froastmycv-production.up.railway.app" target="_blank" rel="noopener" class="share-dropdown-item" role="menuitem">Share on WhatsApp</a>
+            <a href="https://instagram.com/3iik.dev" target="_blank" rel="noopener" class="share-dropdown-item" role="menuitem">Follow on Instagram</a>
+            <button type="button" class="share-dropdown-item" id="shareCopyLink" role="menuitem">Copy Link</button>
           </div>
         </div>
       </div>
     </div>
   </header>
 
-  <main class="pt-20 pb-12 px-margin-desktop max-w-container-max mx-auto min-h-screen" id="resultsScroll">
+  <main class="pt-20 pb-12 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto min-h-screen" id="resultsScroll">
     <div class="results-grid">
       <!-- Left Column: Score -->
       <aside class="results-grid-left sticky top-24 space-y-gutter" id="scoreCard" hidden>
@@ -248,6 +295,54 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
             <p class="text-sm text-on-surface-variant" id="contentSubtitle">The brutal truth about your resume.</p>
           </div>
         </div>
+
+        <!-- Strengths -->
+        <div id="strengthsSection" hidden>
+          <div class="bg-[#121212] brutalist-border rounded-xl p-5">
+            <h3 class="font-label-md text-label-md uppercase tracking-widest text-primary-container mb-3">What You're Doing Well ✅</h3>
+            <ul class="text-sm text-on-surface-variant space-y-2" id="strengthsList"></ul>
+          </div>
+        </div>
+
+        <!-- Keyword Match -->
+        <div id="keywordSection" hidden>
+          <div class="bg-[#121212] brutalist-border rounded-xl p-5">
+            <h3 class="font-label-md text-label-md uppercase tracking-widest text-primary-container mb-3">Keyword Match</h3>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="text-xs text-on-surface-variant">Match Rate:</span>
+              <div class="flex-1 h-2 bg-[#0A0A0A] rounded-full overflow-hidden">
+                <div class="h-full rounded-full transition-all duration-500" id="keywordMatchBar" style="width: 0%; background: linear-gradient(90deg, #ff6b00, #00c853);"></div>
+              </div>
+              <span class="text-xs font-bold text-on-surface" id="keywordMatchRate">0%</span>
+            </div>
+            <div class="keyword-grid" id="keywordMatchList"></div>
+            <div id="missingKeywordsSection" hidden class="mt-3 pt-3 border-t border-[#27272A]">
+              <h4 class="text-xs font-bold text-error uppercase tracking-widest mb-2">Missing Skills</h4>
+              <ul class="text-xs text-on-surface-variant space-y-2" id="missingKeywordsList"></ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Scores -->
+        <div id="categoryScoresSection" hidden>
+          <div class="bg-[#121212] brutalist-border rounded-xl p-5">
+            <h3 class="font-label-md text-label-md uppercase tracking-widest text-primary-container mb-4">Category Scores</h3>
+            <div class="space-y-4" id="categoryScoresList"></div>
+          </div>
+        </div>
+
+        <!-- Recruiter Verdict -->
+        <div id="verdictSection" hidden>
+          <div class="bg-[#121212] brutalist-border rounded-xl p-5">
+            <h3 class="font-label-md text-label-md uppercase tracking-widest text-primary-container mb-3">Recruiter Verdict</h3>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="text-sm text-on-surface-variant">Would I interview you?</span>
+              <span class="text-lg font-black font-display" id="verdictBadge"></span>
+            </div>
+            <div class="space-y-2 text-sm text-on-surface-variant" id="verdictDetails"></div>
+          </div>
+        </div>
+
         <div class="bg-[#121212] brutalist-border rounded-xl min-h-[300px] shadow-2xl relative overflow-hidden" id="resultsBody">
           <div class="rmd text-on-surface-variant">
             <p class="opacity-50">Waiting for results...</p>
@@ -259,7 +354,7 @@ body { background-color: #0A0A0A; color: #f8ddd2; overflow-x: hidden; font-famil
 
   <div class="ig-popup" id="kofiPopup" hidden>
     <div class="ig-popup-content">
-      <button class="ig-popup-close" id="kofiPopupClose">✕</button>
+      <button type="button" class="ig-popup-close" id="kofiPopupClose" aria-label="Close">✕</button>
       <p class="ig-popup-title">Enjoying RoastMyCV? 🔥</p>
       <p class="ig-popup-subtitle">Follow me on Instagram to support!</p>
       <a href="https://instagram.com/3iik.dev" target="_blank" rel="noopener" class="ig-popup-btn inline-flex items-center justify-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg> Follow on Instagram</a>
